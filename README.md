@@ -1,3 +1,6 @@
+View ongoing updated documentation at: https://fondazionechipsit.github.io/iDMA/
+
+
 # iDMA
 [![CI status](https://github.com/pulp-platform/idma/actions/workflows/gitlab-ci.yml/badge.svg?branch=master)](https://github.com/pulp-platform/idma/actions/workflows/gitlab-ci.yml?query=branch%3Amaster)
 [![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/pulp-platform/iDMA?color=blue&label=current&sort=semver)](CHANGELOG.md)
