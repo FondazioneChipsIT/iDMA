@@ -54,3 +54,6 @@ jobs:
         git config user.name "github-ci"
         git fetch --all
         python3 util/deploy.py
+    -
+      name: Deploy Documentation
+      run: mkdocs gh-deploy --force
