@@ -818,9 +818,10 @@
 - Register sets
 - Some binding logic for requests from the register set to the rest of the iDMA and viceversa
 - Round Robin arbiter tree to correctly dispatch the transfers to the required channels</p>
+<p><img alt="iDMA Frontend" src="../../images/iDMA_32_3d_frontend.drawio.svg" /></p>
 <h2 id="idma-register-top">iDMA Register Top</h2>
-<p>The register set for iDMA is structured as follows:</p>
-<p><img alt="alt text" src="../iDMA_32_3d_reg_top.drawio.png" /></p>
+<p>The register set for iDMA is structured as follows:
+<img alt="iDMA Register Top" src="../../images/iDMA_32_3d_reg_top.drawio.svg" /></p>
 <p>So, for each master of the iDMA (generally 8 cores + 2 PE), the following are available:
 - Configuration registers:
     - These include all the transfer parameters + protocols
