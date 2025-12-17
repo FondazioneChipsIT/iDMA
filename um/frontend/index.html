@@ -64,7 +64,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#frontend" class="md-skip">
+        <a href="#idma-frontend" class="md-skip">
           Skip to content
         </a>
       
@@ -595,6 +595,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Frontend
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -611,6 +629,36 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#idma-register-top" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        iDMA Register Top
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -728,6 +776,25 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#idma-register-top" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        iDMA Register Top
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -746,7 +813,25 @@
   
 
 
-<h1 id="frontend">FRONTEND</h1>
+<h1 id="idma-frontend">iDMA FRONTEND</h1>
+<p>Structured as follows:
+- Register sets
+- Some binding logic for requests from the register set to the rest of the iDMA and viceversa
+- Round Robin arbiter tree to correctly dispatch the transfers to the required channels</p>
+<h2 id="idma-register-top">iDMA Register Top</h2>
+<p>The register set for iDMA is structured as follows:</p>
+<p><img alt="alt text" src="../iDMA_32_3d_reg_top.drawio.png" /></p>
+<p>So, for each master of the iDMA (generally 8 cores + 2 PE), the following are available:
+- Configuration registers:
+    - These include all the transfer parameters + protocols
+- Observational registers:
+    - For each physical channel of the iDMA (so 2 in the current iDMA instantiation inside the pulp cluster), a triplet of observational registers is made available. These are necessary for synchronization, arbitrating the transfers and waiting on them.</p>
+<p>Register widths:
+- CONF_REG: 18-bits wide
+- Transfer parameters registers: 32-bits wide
+- Observational registers: 10-bits wide</p>
+<h1 id="ongoing-changes">Ongoing changes</h1>
+<p>Since the current iDMA instance inside the pulp cluster only uses 2 physical channels, most of the register set is unused --&gt; these unused registers could be removed from the design.</p>
 
 
 

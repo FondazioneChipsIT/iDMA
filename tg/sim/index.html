@@ -63,6 +63,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#software-stacks" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -400,6 +405,8 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
+        
+      
       
       <a href="./" class="md-nav__link md-nav__link--active">
         
@@ -718,6 +725,8 @@
   
   
   
+    
+  
   
 </nav>
                   </div>
@@ -737,9 +746,32 @@
   
 
 
-  <h1>Simulation</h1>
-
-
+<h1 id="software-stacks">Software stacks</h1>
+<p>Currently, iDMA simulation is supported both in the pulp-sdk and the pulp-runtime. Besides minimal differences, the main supported features are:</p>
+<ul>
+<li>Supported directions: L1-&gt;L2, L1-&gt;L2, L1-L1</li>
+<li>On each direction, transfers up to 3 dimensions and 64 kByte of total size can be configured.</li>
+<li>Both individual wait and barrier functions based on the transfer direction are supported.</li>
+</ul>
+<p>On both sw stacks, the following testcases are supported:</p>
+<ul>
+<li>Transfer dimensions: 1D, 2D and 3D.</li>
+<li>Multi-core modes: all 8 cores can program the iDMA. Depending on whether MULTI_CORE_S or MULTI_CORE_P is enabled, this happens in a serial or parallel way.</li>
+<li>All transfer directions are tested.</li>
+<li>
+<p>Stimuli for each transfer are generated through python scripts, meaning:</p>
+<ul>
+<li>1D Transfers: size, src_addr, dst_addr</li>
+<li>2D Transfers: size, src_addr, dst_addr, src_stride, dst_stride</li>
+<li>3D Transfers: size, src_addr, dst_addr, src_stride, dst_stride, src_stride_3d, dst_stride_3d, number of 3d repetitions</li>
+</ul>
+</li>
+</ul>
+<p>iDMA tests in regression tests repository: https://github.com/FondazioneChipsIT/regression_tests/tree/new_iDMA_tests/idma_tests</p>
+<p>iDMA tests in pulp-sdk repository: https://github.com/FondazioneChipsIT/pulp-sdk/tree/chips-it/tests/idma</p>
+<h1 id="deeploy-support">Deeploy support</h1>
+<p>iDMA is partially supported inside Deeploy as well (only 1D transfers for now). Can be found here: https://github.com/FondazioneChipsIT/Deeploy/commits/chips-it/</p>
+<p>At the moment, only simulation on the pulp-open + iDMA rtl platform is supported (gvsoc model needs to be updated). </p>
 
 
 
