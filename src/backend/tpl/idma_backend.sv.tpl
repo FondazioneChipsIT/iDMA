@@ -95,6 +95,8 @@ module idma_backend_${name_uniqueifier} #(
     % endif
 % endfor
 ,
+    /// Burst Len (for actual burst length do 8 byte * 2^(Burst_len))
+    parameter int unsigned Burst_len = 4'd5,
     /// Address Read Channel type
     parameter type read_meta_channel_t  = logic,
     /// Address Write Channel type
