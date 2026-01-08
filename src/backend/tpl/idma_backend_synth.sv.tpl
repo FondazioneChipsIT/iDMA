@@ -93,7 +93,9 @@ module idma_backend_synth_${name_uniqueifier} #(
     /// Transfer length type (do not override!)
     parameter type tf_len_t                    = logic[TFLenWidth-1:0],
     /// Offset type (do not override!)
-    parameter type offset_t                    = logic[OffsetWidth-1:0]
+    parameter type offset_t                    = logic[OffsetWidth-1:0],
+    /// Burst Len (for actual burst length do 8 byte * 2^(Burst_len))
+    parameter int unsigned Burst_len = 4'd5
 )(
     input  logic                   clk_i,
     input  logic                   rst_ni,
