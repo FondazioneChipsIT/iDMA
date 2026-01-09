@@ -473,6 +473,7 @@ w_num_bytes_to_pb = w_page_num_bytes_to_pb;
                 addr:   req_i.dst_addr,
                 valid:   1'b1,
                 base_addr: req_i.dst_addr,
+                user: req_i.user,
                 default: '0
             };
             // options
