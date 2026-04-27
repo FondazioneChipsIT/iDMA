@@ -408,6 +408,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Simulation
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -424,6 +442,36 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#example-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example code
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -728,6 +776,25 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#example-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example code
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -769,13 +836,32 @@
 </ul>
 <p><strong>TODO</strong>: allow for burst length configurability directly from the drivers.</p>
 <p>iDMA tests in regression tests repository: https://github.com/FondazioneChipsIT/regression_tests/tree/new_iDMA_tests/idma_tests</p>
-<p>Inside the regression tests folder there is also a benchmark test, that's being used for power evaluations. This test allows three modes:+ù</p>
+<p>Inside the regression tests folder there is also a benchmark test, that's being used for power evaluations. This test allows three modes:</p>
 <pre><code>- TX: allows to enqueue up to 8 transfers towards L2
 - RX: allows to enqueue up to 8 transfers towards L1
 - TX_RX: allows to enqueue up to 8 transfers for each direction and executes them 2-by-2 in parallel.
 - IDLE: the iDMA does nothing and a transfer is executed by Core 0.
 </code></pre>
 <p>iDMA tests in pulp-sdk repository: https://github.com/FondazioneChipsIT/pulp-sdk/tree/chips-it/tests/idma</p>
+<h2 id="example-code">Example code</h2>
+<p>The basic call to iDMA looks like this:</p>
+<pre><code># Enable the iDMA frontend clock (so that we're able to configure it)
+    plp_idma_enable_clk();
+# Configure and launch the transfer
+    plp_cl_dma_wait_toL2(pulp_cl_idma_L1ToL2((unsigned int) src_ptr, (unsigned int) dst_ptr, size));
+# Disable the iDMA frontend clock once the transfer has completed
+    plp_idma_disable_clk();
+</code></pre>
+<p>In this case an individual wait has been used for blocking the execution until the transfer is finished, but also direction-based barrier functions are provided. Usage as follows:</p>
+<pre><code># Enable the iDMA frontend clock (so that we're able to configure it)
+    plp_idma_enable_clk();
+# Configure and launch the transfer
+    pulp_cl_idma_L1ToL2((unsigned int) src_ptr, (unsigned int) dst_ptr, size);
+#Barrier: blocks the execution until all transfers towards L2 are completed.
+    plp_cl_dma_barrier_toL2();
+# Disable the iDMA frontend clock once the transfer has completed
+    plp_idma_disable_clk();
+</code></pre>
 <h1 id="deeploy-support">Deeploy support</h1>
 <p>iDMA is partially supported inside Deeploy as well (only 1D transfers for now). Can be found here: https://github.com/FondazioneChipsIT/Deeploy/commits/chips-it/</p>
 <p>At the moment, only simulation on the pulp-open + iDMA rtl platform is supported (gvsoc model needs to be updated).</p>
