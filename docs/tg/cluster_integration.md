@@ -8,8 +8,8 @@ Currently, the iDMA is instantiated within the pulp cluster as follows:
 - 1 Bidirectional Stream:
     - This is to be intended as two physical channels that can work in parallel towards L1 and towards L2.
 - Fifo Depth set to 8:
-    - This means that up to 8 transfer configurations can be saved for each direction.
+    - This means that up to 8 transfer configurations can be saved for each direction --> 16 total transfers can be configured into the iDMA at the same time.
 
-## Architecture Overview:
+## Pulp Cluster integration scheme:
 
-Insert scheme here
+![iDMA Cluster Integration](../images/iDMA_Cluster_integration.drawio.svg)
