@@ -31,7 +31,7 @@ Inside the regression tests folder there is also a benchmark test, that's being 
 iDMA tests in pulp-sdk repository: https://github.com/FondazioneChipsIT/pulp-sdk/tree/chips-it/tests/idma
 
 ## Example code
-The basic call to iDMA looks like this:
+The basic call to iDMA to execute a 1D transfer looks like this:
 ```
 # Enable the iDMA frontend clock (so that we're able to configure it)
     plp_idma_enable_clk();
@@ -51,6 +51,47 @@ In this case an individual wait has been used for blocking the execution until t
 # Disable the iDMA frontend clock once the transfer has completed
     plp_idma_disable_clk();
 ```
+A one-dimensional transfer is pretty simple in terms of parameters that need to be specified:
+- **src_addr**: this is the starting address in the source memory region
+- **dst_addr**: this is the starting address in the destination memory region
+- **size**: this is the size of the transfer in bytes (maximum supported: 65536)
+
+![1D_transfer_example](../images/1d_transfer_example.png)
+
+As shown in the above image, bytes are accessed contiguously in both memory regions. So, the 1D transfer can be seen as a 2D transfer where both strides and length are set to 1.
+
+When executing 2D transfers:
+- **src_stride**: distance in bytes to jump to the next series of consecutive data in the source region
+- **dst_stride**: distance in bytes to jump to the next series of consecutive data in the destination region
+- **length**: number of consecutive bytes to be transferred before the next stride
+- **num_reps**: transfer size divided by the length, so how many consecutive transfers are to be executed
+
+An obvious requirement is for the length to be less than the strides, in order to avoid overwriting data in the destination region.
+
+![2D_transfer_example](../images/2d_transfer_example.png)
+
+As shown in the above image, having a length greater than the stride would mean overwriting data when jumping.
+In this case, we have:
+- **src_stride**=4
+- **dst_stride**=8
+- **length**=2
+
+When executing 3D transfers, the following need to be defined in addition to the previous parameters:
+- **src_stride_3d**: this stride is the jump in bytes between two 2D "pages" in the source region of the transfer
+- **dst_stride_3d**: this stride is the jump in bytes between two 2D "pages" in the destination region of the transfer
+- **num_reps_3d**: this is the number of 2D transfers that make up the three-dimensional transfer
+
+![3D_transfer_example](../images/3d_transfer_example.png)
+
+As shown in the above image, the 3D transfer is composed of several (nmm_reps_3d) 2D transfers. The yellow arrows represent the 3D strides.
+In this case we have:
+- **src_stride**=4
+- **dst_stride**=8
+- **length**=2
+- **src_stride_3d**=16
+- **dst_stride_3d**=8
+
+Also, notice that strides (both 2D and 3D) can be different between the source and the destination memory regions.
 
 # Deeploy support
 
