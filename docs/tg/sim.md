@@ -21,7 +21,7 @@ On both sw stacks, the following testcases are supported:
 
 iDMA tests in regression tests repository: https://github.com/FondazioneChipsIT/regression_tests/tree/new_iDMA_tests/idma_tests
 
-Inside the regression tests folder there is also a benchmark test, that's being used for power evaluations. This test allows three modes:+ù
+Inside the regression tests folder there is also a benchmark test, that's being used for power evaluations. This test allows three modes:
 
     - TX: allows to enqueue up to 8 transfers towards L2
     - RX: allows to enqueue up to 8 transfers towards L1
@@ -29,6 +29,28 @@ Inside the regression tests folder there is also a benchmark test, that's being 
     - IDLE: the iDMA does nothing and a transfer is executed by Core 0.
 
 iDMA tests in pulp-sdk repository: https://github.com/FondazioneChipsIT/pulp-sdk/tree/chips-it/tests/idma
+
+## Example code
+The basic call to iDMA looks like this:
+```
+# Enable the iDMA frontend clock (so that we're able to configure it)
+    plp_idma_enable_clk();
+# Configure and launch the transfer
+    plp_cl_dma_wait_toL2(pulp_cl_idma_L1ToL2((unsigned int) src_ptr, (unsigned int) dst_ptr, size));
+# Disable the iDMA frontend clock once the transfer has completed
+    plp_idma_disable_clk();
+```
+In this case an individual wait has been used for blocking the execution until the transfer is finished, but also direction-based barrier functions are provided. Usage as follows:
+```
+# Enable the iDMA frontend clock (so that we're able to configure it)
+    plp_idma_enable_clk();
+# Configure and launch the transfer
+    pulp_cl_idma_L1ToL2((unsigned int) src_ptr, (unsigned int) dst_ptr, size);
+#Barrier: blocks the execution until all transfers towards L2 are completed.
+    plp_cl_dma_barrier_toL2();
+# Disable the iDMA frontend clock once the transfer has completed
+    plp_idma_disable_clk();
+```
 
 # Deeploy support
 
