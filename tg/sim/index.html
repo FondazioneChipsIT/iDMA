@@ -844,7 +844,7 @@
 </code></pre>
 <p>iDMA tests in pulp-sdk repository: https://github.com/FondazioneChipsIT/pulp-sdk/tree/chips-it/tests/idma</p>
 <h2 id="example-code">Example code</h2>
-<p>The basic call to iDMA looks like this:</p>
+<p>The basic call to iDMA to execute a 1D transfer looks like this:</p>
 <pre><code># Enable the iDMA frontend clock (so that we're able to configure it)
     plp_idma_enable_clk();
 # Configure and launch the transfer
@@ -862,6 +862,37 @@
 # Disable the iDMA frontend clock once the transfer has completed
     plp_idma_disable_clk();
 </code></pre>
+<p>A one-dimensional transfer is pretty simple in terms of parameters that need to be specified:
+- <strong>src_addr</strong>: this is the starting address in the source memory region
+- <strong>dst_addr</strong>: this is the starting address in the destination memory region
+- <strong>size</strong>: this is the size of the transfer in bytes (maximum supported: 65536)</p>
+<p><img alt="1D_transfer_example" src="../../images/1d_transfer_example.png" /></p>
+<p>As shown in the above image, bytes are accessed contiguously in both memory regions. So, the 1D transfer can be seen as a 2D transfer where both strides and length are set to 1.</p>
+<p>When executing 2D transfers:
+- <strong>src_stride</strong>: distance in bytes to jump to the next series of consecutive data in the source region
+- <strong>dst_stride</strong>: distance in bytes to jump to the next series of consecutive data in the destination region
+- <strong>length</strong>: number of consecutive bytes to be transferred before the next stride
+- <strong>num_reps</strong>: transfer size divided by the length, so how many consecutive transfers are to be executed</p>
+<p>An obvious requirement is for the length to be less than the strides, in order to avoid overwriting data in the destination region.</p>
+<p><img alt="2D_transfer_example" src="../../images/2d_transfer_example.png" /></p>
+<p>As shown in the above image, having a length greater than the stride would mean overwriting data when jumping.
+In this case, we have:
+- <strong>src_stride</strong>=4
+- <strong>dst_stride</strong>=8
+- <strong>length</strong>=2</p>
+<p>When executing 3D transfers, the following need to be defined in addition to the previous parameters:
+- <strong>src_stride_3d</strong>: this stride is the jump in bytes between two 2D "pages" in the source region of the transfer
+- <strong>dst_stride_3d</strong>: this stride is the jump in bytes between two 2D "pages" in the destination region of the transfer
+- <strong>num_reps_3d</strong>: this is the number of 2D transfers that make up the three-dimensional transfer</p>
+<p><img alt="3D_transfer_example" src="../../images/3d_transfer_example.png" /></p>
+<p>As shown in the above image, the 3D transfer is composed of several (nmm_reps_3d) 2D transfers. The yellow arrows represent the 3D strides.
+In this case we have:
+- <strong>src_stride</strong>=4
+- <strong>dst_stride</strong>=8
+- <strong>length</strong>=2
+- <strong>src_stride_3d</strong>=16
+- <strong>dst_stride_3d</strong>=8</p>
+<p>Also, notice that strides (both 2D and 3D) can be different between the source and the destination memory regions.</p>
 <h1 id="deeploy-support">Deeploy support</h1>
 <p>iDMA is partially supported inside Deeploy as well (only 1D transfers for now). Can be found here: https://github.com/FondazioneChipsIT/Deeploy/commits/chips-it/</p>
 <p>At the moment, only simulation on the pulp-open + iDMA rtl platform is supported (gvsoc model needs to be updated).</p>
