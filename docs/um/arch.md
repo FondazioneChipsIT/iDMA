@@ -3,6 +3,7 @@
 ## 32-bits Frontend
 
 ### Insert top architecture scheme here
+![iDMA Top Architecture](../images/iDMA_top_architecture.png)
 
 ## Clock Gating Strategy
 

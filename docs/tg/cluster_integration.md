@@ -9,6 +9,8 @@ Currently, the iDMA is instantiated within the pulp cluster as follows:
     - This is to be intended as two physical channels that can work in parallel towards L1 and towards L2.
 - Fifo Depth set to 8:
     - This means that up to 8 transfer configurations can be saved for each direction --> 16 total transfers can be configured into the iDMA at the same time.
+- Clock gating:
+    - The clock gating cell is controlled by the cluster control unit. This allows to completely shut down the iDMA clock, thus achieving lower power consumption when the IP is not being used.
 
 ## Pulp Cluster integration scheme:
 
