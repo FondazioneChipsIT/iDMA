@@ -656,6 +656,28 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#registers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#current-configurations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current configurations
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -793,6 +815,28 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#registers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#current-configurations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current configurations
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -831,6 +875,134 @@
 - CONF_REG: 18-bits wide
 - Transfer parameters registers: 32-bits wide
 - Observational registers: 10-bits wide</p>
+<h2 id="registers">Registers</h2>
+<table>
+<thead>
+<tr>
+<th>Register</th>
+<th>Offset</th>
+<th>Bitwidth</th>
+<th>Fields</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CONF_REG</td>
+<td></td>
+<td>18</td>
+<td>Decouple options, reduce max len options, protocol options</td>
+</tr>
+<tr>
+<td>DST_ADDR_LOW_REG</td>
+<td></td>
+<td>32</td>
+<td>Starting address at the destination memory region</td>
+</tr>
+<tr>
+<td>SRC_ADDR_LOW_REG</td>
+<td></td>
+<td>32</td>
+<td>Starting address at the source memory region</td>
+</tr>
+<tr>
+<td>LENGTH_LOW_REG</td>
+<td></td>
+<td>32</td>
+<td>Length parameter of the transfer</td>
+</tr>
+<tr>
+<td>DST_STRIDE_2_LOW_REG</td>
+<td></td>
+<td>32</td>
+<td>2D stride parameter at the destination memory region</td>
+</tr>
+<tr>
+<td>SRC_STRIDE_2_LOW_REG</td>
+<td></td>
+<td>32</td>
+<td>2D stride parameter at the source memory region</td>
+</tr>
+<tr>
+<td>REPS_2_LOW_REG</td>
+<td></td>
+<td>32</td>
+<td>2D repetitions parameter</td>
+</tr>
+<tr>
+<td>DST_STRIDE_3_LOW_REG</td>
+<td></td>
+<td>32</td>
+<td>3D stride parameter the destination memory region</td>
+</tr>
+<tr>
+<td>SRC_STRIDE_3_LOW_REG</td>
+<td></td>
+<td>32</td>
+<td>3D stride parameter the source memorey region</td>
+</tr>
+<tr>
+<td>REPS_3_LOW_REG</td>
+<td></td>
+<td>32</td>
+<td>3D repetitions parameter</td>
+</tr>
+<tr>
+<td>STATUS_0_REG</td>
+<td></td>
+<td>10</td>
+<td>Status register on the stream 0 channel</td>
+</tr>
+<tr>
+<td>STATUS_1_REG</td>
+<td></td>
+<td>10</td>
+<td>Status register on the stream 1</td>
+</tr>
+<tr>
+<td>NEXT_ID_0_REG</td>
+<td></td>
+<td>31</td>
+<td>Next ID register on the stream 0</td>
+</tr>
+<tr>
+<td>NEXT_ID_1_REG</td>
+<td></td>
+<td>31</td>
+<td>Next ID register on the stream 1</td>
+</tr>
+<tr>
+<td>DONE_ID_0_REG</td>
+<td></td>
+<td>31</td>
+<td>Done ID register on the stream 0</td>
+</tr>
+<tr>
+<td>DONE_ID_1_REG</td>
+<td></td>
+<td>31</td>
+<td>Done ID register on the stream 1</td>
+</tr>
+</tbody>
+</table>
+<h2 id="current-configurations">Current configurations</h2>
+<p>In the pulp-sdk and pulp-runtime sw stacks we're configuring the iDMA as follows:</p>
+<pre><code>
+#define IDMA_DEFAULT_CONFIG 0x0
+#define IDMA_DEFAULT_CONFIG_L1TOL2 (IDMA_DEFAULT_CONFIG | (IDMA_PROT_OBI &lt;&lt; IDMA_REG32_3D_CONF_SRC_PROTOCOL_OFFSET) | (IDMA_PROT_AXI &lt;&lt; IDMA_REG32_3D_CONF_DST_PROTOCOL_OFFSET))
+#define IDMA_DEFAULT_CONFIG_L2TOL1 (IDMA_DEFAULT_CONFIG | (IDMA_PROT_AXI &lt;&lt; IDMA_REG32_3D_CONF_SRC_PROTOCOL_OFFSET) | (IDMA_PROT_OBI &lt;&lt; IDMA_REG32_3D_CONF_DST_PROTOCOL_OFFSET))
+#define IDMA_DEFAULT_CONFIG_L1TOL1 (IDMA_DEFAULT_CONFIG | (IDMA_PROT_OBI &lt;&lt; IDMA_REG32_3D_CONF_SRC_PROTOCOL_OFFSET) | (IDMA_PROT_OBI &lt;&lt; IDMA_REG32_3D_CONF_DST_PROTOCOL_OFFSET))
+
+#define IDMA_DEFAULT_CONFIG_2D 0x400
+#define IDMA_DEFAULT_CONFIG_L1TOL2_2D (IDMA_DEFAULT_CONFIG_2D | (IDMA_PROT_OBI &lt;&lt; IDMA_REG32_3D_CONF_SRC_PROTOCOL_OFFSET) | (IDMA_PROT_AXI &lt;&lt; IDMA_REG32_3D_CONF_DST_PROTOCOL_OFFSET))
+#define IDMA_DEFAULT_CONFIG_L2TOL1_2D (IDMA_DEFAULT_CONFIG_2D | (IDMA_PROT_AXI &lt;&lt; IDMA_REG32_3D_CONF_SRC_PROTOCOL_OFFSET) | (IDMA_PROT_OBI &lt;&lt; IDMA_REG32_3D_CONF_DST_PROTOCOL_OFFSET))
+#define IDMA_DEFAULT_CONFIG_L1TOL1_2D (IDMA_DEFAULT_CONFIG_2D | (IDMA_PROT_OBI &lt;&lt; IDMA_REG32_3D_CONF_SRC_PROTOCOL_OFFSET) | (IDMA_PROT_OBI &lt;&lt; IDMA_REG32_3D_CONF_DST_PROTOCOL_OFFSET))
+
+#define IDMA_DEFAULT_CONFIG_3D 0x800
+#define IDMA_DEFAULT_CONFIG_L1TOL2_3D (IDMA_DEFAULT_CONFIG_3D | (IDMA_PROT_OBI &lt;&lt; IDMA_REG32_3D_CONF_SRC_PROTOCOL_OFFSET) | (IDMA_PROT_AXI &lt;&lt; IDMA_REG32_3D_CONF_DST_PROTOCOL_OFFSET))
+#define IDMA_DEFAULT_CONFIG_L2TOL1_3D (IDMA_DEFAULT_CONFIG_3D | (IDMA_PROT_AXI &lt;&lt; IDMA_REG32_3D_CONF_SRC_PROTOCOL_OFFSET) | (IDMA_PROT_OBI &lt;&lt; IDMA_REG32_3D_CONF_DST_PROTOCOL_OFFSET))
+#define IDMA_DEFAULT_CONFIG_L1TOL1_3D (IDMA_DEFAULT_CONFIG_3D | (IDMA_PROT_OBI &lt;&lt; IDMA_REG32_3D_CONF_SRC_PROTOCOL_OFFSET) | (IDMA_PROT_OBI &lt;&lt; IDMA_REG32_3D_CONF_DST_PROTOCOL_OFFSET))
+
+</code></pre>
 
 
 
