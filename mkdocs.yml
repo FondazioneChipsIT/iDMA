@@ -31,6 +31,7 @@ nav:
 - User Manual:
   - um/index.md
   - Architecture: um/arch.md
+  - Top Earlgrey Architecture: um/opentitan_integration.md
   - Frontend: um/frontend.md
   - Midend: um/midend.md
   - Backend: um/backend.md
