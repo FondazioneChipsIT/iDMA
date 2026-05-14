@@ -52,6 +52,7 @@ In this case an individual wait has been used for blocking the execution until t
     plp_idma_disable_clk();
 ```
 A one-dimensional transfer is pretty simple in terms of parameters that need to be specified:
+
 - **src_addr**: this is the starting address in the source memory region
 - **dst_addr**: this is the starting address in the destination memory region
 - **size**: this is the size of the transfer in bytes (maximum supported: 65536)
