@@ -875,10 +875,12 @@
 # Disable the iDMA frontend clock once the transfer has completed
     plp_idma_disable_clk();
 </code></pre>
-<p>A one-dimensional transfer is pretty simple in terms of parameters that need to be specified:
-- <strong>src_addr</strong>: this is the starting address in the source memory region
-- <strong>dst_addr</strong>: this is the starting address in the destination memory region
-- <strong>size</strong>: this is the size of the transfer in bytes (maximum supported: 65536)</p>
+<p>A one-dimensional transfer is pretty simple in terms of parameters that need to be specified:</p>
+<ul>
+<li><strong>src_addr</strong>: this is the starting address in the source memory region</li>
+<li><strong>dst_addr</strong>: this is the starting address in the destination memory region</li>
+<li><strong>size</strong>: this is the size of the transfer in bytes (maximum supported: 65536)</li>
+</ul>
 <p><img alt="1D_transfer_example" src="../../images/1d_transfer_example.png" /></p>
 <p>As shown in the above image, bytes are accessed contiguously in both memory regions. So, the 1D transfer can be seen as a 2D transfer where both strides and length are set to 1.</p>
 <p>When executing 2D transfers:
