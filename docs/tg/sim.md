@@ -12,7 +12,6 @@ On both sw stacks, the following testcases are supported:
 - Multi-core modes: all 8 cores can program the iDMA. Depending on whether MULTI_CORE_S or MULTI_CORE_P is enabled, this happens in a serial or parallel way.
 - All transfer directions are tested.
 - Stimuli for each transfer are generated through python scripts, meaning:
-
     - 1D Transfers: size, src_addr, dst_addr
     - 2D Transfers: size, src_addr, dst_addr, src_stride, dst_stride
     - 3D Transfers: size, src_addr, dst_addr, src_stride, dst_stride, src_stride_3d, dst_stride_3d, number of 3d repetitions
@@ -31,7 +30,9 @@ Inside the regression tests folder there is also a benchmark test, that's being 
 iDMA tests in pulp-sdk repository: https://github.com/FondazioneChipsIT/pulp-sdk/tree/chips-it/tests/idma
 
 ## Example code
+
 The basic call to iDMA to execute a 1D transfer looks like this:
+
 ```
 # Enable the iDMA frontend clock (so that we're able to configure it)
     plp_idma_enable_clk();
@@ -40,7 +41,9 @@ The basic call to iDMA to execute a 1D transfer looks like this:
 # Disable the iDMA frontend clock once the transfer has completed
     plp_idma_disable_clk();
 ```
+
 In this case an individual wait has been used for blocking the execution until the transfer is finished, but also direction-based barrier functions are provided. Usage as follows:
+
 ```
 # Enable the iDMA frontend clock (so that we're able to configure it)
     plp_idma_enable_clk();
@@ -51,6 +54,7 @@ In this case an individual wait has been used for blocking the execution until t
 # Disable the iDMA frontend clock once the transfer has completed
     plp_idma_disable_clk();
 ```
+
 A one-dimensional transfer is pretty simple in terms of parameters that need to be specified:
 
 - **src_addr**: this is the starting address in the source memory region
@@ -62,6 +66,7 @@ A one-dimensional transfer is pretty simple in terms of parameters that need to 
 As shown in the above image, bytes are accessed contiguously in both memory regions. So, the 1D transfer can be seen as a 2D transfer where both strides and length are set to 1.
 
 When executing 2D transfers:
+
 - **src_stride**: distance in bytes to jump to the next series of consecutive data in the source region
 - **dst_stride**: distance in bytes to jump to the next series of consecutive data in the destination region
 - **length**: number of consecutive bytes to be transferred before the next stride
@@ -73,11 +78,13 @@ An obvious requirement is for the length to be less than the strides, in order t
 
 As shown in the above image, having a length greater than the stride would mean overwriting data when jumping.
 In this case, we have:
+
 - **src_stride**=4
 - **dst_stride**=8
 - **length**=2
 
 When executing 3D transfers, the following need to be defined in addition to the previous parameters:
+
 - **src_stride_3d**: this stride is the jump in bytes between two 2D "pages" in the source region of the transfer
 - **dst_stride_3d**: this stride is the jump in bytes between two 2D "pages" in the destination region of the transfer
 - **num_reps_3d**: this is the number of 2D transfers that make up the three-dimensional transfer
@@ -86,6 +93,7 @@ When executing 3D transfers, the following need to be defined in addition to the
 
 As shown in the above image, the 3D transfer is composed of several (nmm_reps_3d) 2D transfers. The yellow arrows represent the 3D strides.
 In this case we have:
+
 - **src_stride**=4
 - **dst_stride**=8
 - **length**=2
@@ -94,15 +102,17 @@ In this case we have:
 
 Also, notice that strides (both 2D and 3D) can be different between the source and the destination memory regions.
 
-# Deeploy support
+## Deeploy support
 
 iDMA is partially supported inside Deeploy as well (only 1D transfers for now). Can be found here: https://github.com/FondazioneChipsIT/Deeploy/commits/chips-it/
 
 At the moment, only simulation on the pulp-open + iDMA rtl platform is supported (gvsoc model needs to be updated).
 
 At the moment, iDMA is supported in Deeploy. The following features are tested:
+
 - 1D/2D transfers
 - clock gating control
 
-### Note:
+### Note
+
 - In Deeploy the pulp-sdk drivers for iDMA are used.
