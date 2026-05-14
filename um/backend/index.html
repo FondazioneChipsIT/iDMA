@@ -467,6 +467,8 @@
     
       
         
+          
+        
       
         
       
@@ -496,8 +498,9 @@
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
-            
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
   
   
   <span class="md-ellipsis">
@@ -511,8 +514,14 @@
   
   
 
-            <span class="md-nav__icon md-icon"></span>
-          </label>
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
         
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_3">
@@ -525,32 +534,6 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../index.md" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    None
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
               
             
               
@@ -732,33 +715,33 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#insert-scheme-here" class="md-nav__link">
+  <a href="#backend-for-transfers-towards-l2" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Insert Scheme here
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Insert Scheme here">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#channel-for-transfers-towards-l2" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Channel for transfers towards L2
+        Backend for transfers towards L2
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#channel-for-transfers-towards-l1" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#description" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Channel for transfers towards L1
+        Description
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Description">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#backend-for-transfers-towards-l1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backend for transfers towards L1
       
     </span>
   </a>
@@ -771,7 +754,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#description" class="md-nav__link">
+  <a href="#description_1" class="md-nav__link">
     <span class="md-ellipsis">
       
         Description
@@ -852,33 +835,33 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#insert-scheme-here" class="md-nav__link">
+  <a href="#backend-for-transfers-towards-l2" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Insert Scheme here
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Insert Scheme here">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#channel-for-transfers-towards-l2" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Channel for transfers towards L2
+        Backend for transfers towards L2
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#channel-for-transfers-towards-l1" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#description" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Channel for transfers towards L1
+        Description
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Description">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#backend-for-transfers-towards-l1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backend for transfers towards L1
       
     </span>
   </a>
@@ -891,7 +874,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#description" class="md-nav__link">
+  <a href="#description_1" class="md-nav__link">
     <span class="md-ellipsis">
       
         Description
@@ -925,20 +908,35 @@
 <p>This part of the iDMA is responsible for executing 1D transfers.
 In the current pulp cluster implementation there are two physical channels:
 - One supporting transfers towards L2: <em>idma_backend_r_obi_rw_init_w_axi</em>
-- The other supporting transfers towards L1: <em>idma_backend_r_axi_rw_init_rw_obi</em></p>
+    - In this case OBI is used as source protocol while AXI as destination protocol.
+- The other supporting transfers towards L1: <em>idma_backend_r_axi_rw_init_rw_obi</em>
+    - In this case AXI is used as source protocol while OBI as destination protocol.</p>
 <p>So, the source and destination protocols that are being configured differ from one case to the other.</p>
-<h2 id="insert-scheme-here">Insert Scheme here</h2>
-<h3 id="channel-for-transfers-towards-l2">Channel for transfers towards L2</h3>
+<h3 id="backend-for-transfers-towards-l2">Backend for transfers towards L2</h3>
 <p>Scheme:
 <img alt="iDMA_gen_copy_out_backend" src="../../images/iDMA_backend_r_obi_rw_init_w_axi.drawio.svg" /></p>
 <p>Transportation Layer scheme:
 <img alt="iDMA_transportation_layer_gen_copy_out" src="../../images/iDMA_transport_layer_r_obi_rw_init_w_axi.drawio.svg" /></p>
-<h3 id="channel-for-transfers-towards-l1">Channel for transfers towards L1</h3>
+<h2 id="description">Description</h2>
+<p>Since we're transferring data towards L2, the following is true:
+- We'll use the OBI protocol to read data from L1
+- We'll use the AXI protocol to write data to L2</p>
+<p>Data coming from the <em>idma_obi_read_module</em> is sent to the <em>iDMA_dataflow_element</em> module, which is just a buffer of StrbWidth parallel FIFOs to keep the data.</p>
+<p><img alt="iDMA_dataflow_element" src="../../images/iDMA_dataflow_element.drawio.svg" /></p>
+<p>From the dataflow element, the data is then sent to the iDMA_axi_write module, where the write request for the AXI protocol is created.</p>
+<h4 id="note-bursting-is-supported-by-default-at-256-bits">Note: bursting is supported (by default at 256 bits).</h4>
+<p>Then the write request is sent back to the top of the iDMA wrapper to be connected to the <em>axi_rw_stream_join</em> module.</p>
+<h3 id="backend-for-transfers-towards-l1">Backend for transfers towards L1</h3>
 <p>Scheme:
 <img alt="iDMA_gen_copy_in_backend" src="../../images/iDMA_backend_r_axi_rw_init_rw_obi.drawio.svg" /></p>
 <p>Transportation Layer scheme:
-<img alt="iDMA_transportation_layer_gen_copy_in" src="../../images/iDMA_transport_layer_r_obi_rw_init_w_axi.drawio.svg" /></p>
-<h2 id="description">Description</h2>
+<img alt="iDMA_transportation_layer_gen_copy_in" src="../../images/iDMA_transport_layer_r_axi_rw_init_rw_obi.drawio.svg" /></p>
+<h2 id="description_1">Description</h2>
+<p>The situation is very similar to the L1 -&gt; L2 case. The communication protocols are switched now:
+- We'll use the AXI protocol to read data from L2
+- We'll use the OBI protocol to write data to L1</p>
+<p>The structure of the iDMA dataflow element does not change with respect to the previous case. Data coming from the <em>iDMA_axi_read</em> module is sent to the dataflow element, where it passes through the FIFO buffer. Then, it's sent to the <em>iDMA_obi_write</em> module for creating the OBI write request, which is sent to the top of the iDMA wrapper.
+There, it gets handled by the <em>OBI_rready_converter</em> before going into the <em>mem_to_banks_write</em> module, where it gets dispatched on two tcdm_master ports (with a 32-bits data width).</p>
 
 
 
