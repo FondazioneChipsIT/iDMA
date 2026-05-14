@@ -98,3 +98,10 @@ Also, notice that strides (both 2D and 3D) can be different between the source a
 iDMA is partially supported inside Deeploy as well (only 1D transfers for now). Can be found here: https://github.com/FondazioneChipsIT/Deeploy/commits/chips-it/
 
 At the moment, only simulation on the pulp-open + iDMA rtl platform is supported (gvsoc model needs to be updated).
+
+At the moment, iDMA is supported in Deeploy. The following features are tested:
+- 1D/2D transfers
+- clock gating control
+
+### Note:
+- In Deeploy the pulp-sdk drivers for iDMA are used.
