@@ -19,6 +19,6 @@ Refer to the schemes below:
 
 The clock gating cell at cluster level is controlled by the iDMA sw drivers. This means that the programmer must make sure the clock is enabled before commencing a transfer.
 
-## 32-bits Frontend in Top Earlgrey
+## 32-bits Frontend in Security island
 
 ![iDMA Top Architecture Top Earlgrey](../images/iDMA_top_architecture_top_earlgrey.png)
