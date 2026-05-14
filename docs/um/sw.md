@@ -20,4 +20,4 @@ So, the usual call to iDMA looks like this:
     - Transfer execution: handled inside the transfer function.
 - Synchronization:
     - Depending on the user needs, choose whether to wait for the individual transfer or until no transfers are ongoing on a certain direction.
-- Disable the sw-controlled  l
+- Disable the sw-controlled clock. After this iDMA becomes again unresponsive to incoming requests.
