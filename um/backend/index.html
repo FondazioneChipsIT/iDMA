@@ -906,11 +906,17 @@
 
 <h1 id="idma-backend">iDMA BACKEND</h1>
 <p>This part of the iDMA is responsible for executing 1D transfers.
-In the current pulp cluster implementation there are two physical channels:
-- One supporting transfers towards L2: <em>idma_backend_r_obi_rw_init_w_axi</em>
-    - In this case OBI is used as source protocol while AXI as destination protocol.
-- The other supporting transfers towards L1: <em>idma_backend_r_axi_rw_init_rw_obi</em>
-    - In this case AXI is used as source protocol while OBI as destination protocol.</p>
+In the current pulp cluster implementation there are two physical channels:</p>
+<ul>
+<li>One supporting transfers towards L2: <em>idma_backend_r_obi_rw_init_w_axi</em><ul>
+<li>In this case OBI is used as source protocol while AXI as destination protocol.</li>
+</ul>
+</li>
+<li>The other supporting transfers towards L1: <em>idma_backend_r_axi_rw_init_rw_obi</em><ul>
+<li>In this case AXI is used as source protocol while OBI as destination protocol.</li>
+</ul>
+</li>
+</ul>
 <p>So, the source and destination protocols that are being configured differ from one case to the other.</p>
 <h3 id="backend-for-transfers-towards-l2">Backend for transfers towards L2</h3>
 <p>Scheme:
@@ -918,13 +924,15 @@ In the current pulp cluster implementation there are two physical channels:
 <p>Transportation Layer scheme:
 <img alt="iDMA_transportation_layer_gen_copy_out" src="../../images/iDMA_transport_layer_r_obi_rw_init_w_axi.drawio.svg" /></p>
 <h2 id="description">Description</h2>
-<p>Since we're transferring data towards L2, the following is true:
-- We'll use the OBI protocol to read data from L1
-- We'll use the AXI protocol to write data to L2</p>
+<p>Since we're transferring data towards L2, the following is true:</p>
+<ul>
+<li>We'll use the OBI protocol to read data from L1</li>
+<li>We'll use the AXI protocol to write data to L2</li>
+</ul>
 <p>Data coming from the <em>idma_obi_read_module</em> is sent to the <em>iDMA_dataflow_element</em> module, which is just a buffer of StrbWidth parallel FIFOs to keep the data.</p>
 <p><img alt="iDMA_dataflow_element" src="../../images/iDMA_dataflow_element.drawio.svg" /></p>
 <p>From the dataflow element, the data is then sent to the iDMA_axi_write module, where the write request for the AXI protocol is created.</p>
-<h4 id="note-bursting-is-supported-by-default-at-256-bits">Note: bursting is supported (by default at 256 bits).</h4>
+<h4 id="note-bursting-is-supported-by-default-at-256-bits">Note: bursting is supported (by default at 256 bits)</h4>
 <p>Then the write request is sent back to the top of the iDMA wrapper to be connected to the <em>axi_rw_stream_join</em> module.</p>
 <h3 id="backend-for-transfers-towards-l1">Backend for transfers towards L1</h3>
 <p>Scheme:
@@ -932,9 +940,11 @@ In the current pulp cluster implementation there are two physical channels:
 <p>Transportation Layer scheme:
 <img alt="iDMA_transportation_layer_gen_copy_in" src="../../images/iDMA_transport_layer_r_axi_rw_init_rw_obi.drawio.svg" /></p>
 <h2 id="description_1">Description</h2>
-<p>The situation is very similar to the L1 -&gt; L2 case. The communication protocols are switched now:
-- We'll use the AXI protocol to read data from L2
-- We'll use the OBI protocol to write data to L1</p>
+<p>The situation is very similar to the L1 -&gt; L2 case. The communication protocols are switched now:</p>
+<ul>
+<li>We'll use the AXI protocol to read data from L2</li>
+<li>We'll use the OBI protocol to write data to L1</li>
+</ul>
 <p>The structure of the iDMA dataflow element does not change with respect to the previous case. Data coming from the <em>iDMA_axi_read</em> module is sent to the dataflow element, where it passes through the FIFO buffer. Then, it's sent to the <em>iDMA_obi_write</em> module for creating the OBI write request, which is sent to the top of the iDMA wrapper.
 There, it gets handled by the <em>OBI_rready_converter</em> before going into the <em>mem_to_banks_write</em> module, where it gets dispatched on two tcdm_master ports (with a 32-bits data width).</p>
 

@@ -690,7 +690,7 @@
   <a href="#note" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Note:
+        Note
       
     </span>
   </a>
@@ -810,7 +810,7 @@
   <a href="#note" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Note:
+        Note
       
     </span>
   </a>
@@ -849,10 +849,12 @@
 
 
 <h1 id="idma-midend">iDMA MIDEND</h1>
-<p>This part of the iDMA is responsible for handling multi-dimensional transfers:
-- The multi-dimensional transfers are split into 1-dimensional transfers and then sent to the backend for execution.</p>
+<p>This part of the iDMA is responsible for handling multi-dimensional transfers:</p>
+<ul>
+<li>The multi-dimensional transfers are split into 1-dimensional transfers and then sent to the backend for execution.</li>
+</ul>
 <p>An iDMA midend module is instantiated for each bidirectional stream.</p>
-<h2 id="note">Note:</h2>
+<h2 id="note">Note</h2>
 <p>This portion of the iDMA is gated by the rtl-controlled clock gating cell inside the iDMA wrapper, meaning it's clocked only when actually needed for a transfer along the specified direction.</p>
 <h2 id="insert-scheme-here">Insert scheme here</h2>
 <p><img alt="iDMA_nd_midend" src="../../images/iDMA_nd_midend.drawio.svg" /></p>

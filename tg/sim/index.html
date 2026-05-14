@@ -469,6 +469,34 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#deeploy-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deeploy support
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Deeploy support">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#note" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Note
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -806,6 +834,34 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#deeploy-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deeploy support
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Deeploy support">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#note" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Note
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -838,9 +894,7 @@
 <li>Transfer dimensions: 1D, 2D and 3D.</li>
 <li>Multi-core modes: all 8 cores can program the iDMA. Depending on whether MULTI_CORE_S or MULTI_CORE_P is enabled, this happens in a serial or parallel way.</li>
 <li>All transfer directions are tested.</li>
-<li>
-<p>Stimuli for each transfer are generated through python scripts, meaning:</p>
-<ul>
+<li>Stimuli for each transfer are generated through python scripts, meaning:<ul>
 <li>1D Transfers: size, src_addr, dst_addr</li>
 <li>2D Transfers: size, src_addr, dst_addr, src_stride, dst_stride</li>
 <li>3D Transfers: size, src_addr, dst_addr, src_stride, dst_stride, src_stride_3d, dst_stride_3d, number of 3d repetitions</li>
@@ -883,38 +937,48 @@
 </ul>
 <p><img alt="1D_transfer_example" src="../../images/1d_transfer_example.png" /></p>
 <p>As shown in the above image, bytes are accessed contiguously in both memory regions. So, the 1D transfer can be seen as a 2D transfer where both strides and length are set to 1.</p>
-<p>When executing 2D transfers:
-- <strong>src_stride</strong>: distance in bytes to jump to the next series of consecutive data in the source region
-- <strong>dst_stride</strong>: distance in bytes to jump to the next series of consecutive data in the destination region
-- <strong>length</strong>: number of consecutive bytes to be transferred before the next stride
-- <strong>num_reps</strong>: transfer size divided by the length, so how many consecutive transfers are to be executed</p>
+<p>When executing 2D transfers:</p>
+<ul>
+<li><strong>src_stride</strong>: distance in bytes to jump to the next series of consecutive data in the source region</li>
+<li><strong>dst_stride</strong>: distance in bytes to jump to the next series of consecutive data in the destination region</li>
+<li><strong>length</strong>: number of consecutive bytes to be transferred before the next stride</li>
+<li><strong>num_reps</strong>: transfer size divided by the length, so how many consecutive transfers are to be executed</li>
+</ul>
 <p>An obvious requirement is for the length to be less than the strides, in order to avoid overwriting data in the destination region.</p>
 <p><img alt="2D_transfer_example" src="../../images/2d_transfer_example.png" /></p>
 <p>As shown in the above image, having a length greater than the stride would mean overwriting data when jumping.
-In this case, we have:
-- <strong>src_stride</strong>=4
-- <strong>dst_stride</strong>=8
-- <strong>length</strong>=2</p>
-<p>When executing 3D transfers, the following need to be defined in addition to the previous parameters:
-- <strong>src_stride_3d</strong>: this stride is the jump in bytes between two 2D "pages" in the source region of the transfer
-- <strong>dst_stride_3d</strong>: this stride is the jump in bytes between two 2D "pages" in the destination region of the transfer
-- <strong>num_reps_3d</strong>: this is the number of 2D transfers that make up the three-dimensional transfer</p>
+In this case, we have:</p>
+<ul>
+<li><strong>src_stride</strong>=4</li>
+<li><strong>dst_stride</strong>=8</li>
+<li><strong>length</strong>=2</li>
+</ul>
+<p>When executing 3D transfers, the following need to be defined in addition to the previous parameters:</p>
+<ul>
+<li><strong>src_stride_3d</strong>: this stride is the jump in bytes between two 2D "pages" in the source region of the transfer</li>
+<li><strong>dst_stride_3d</strong>: this stride is the jump in bytes between two 2D "pages" in the destination region of the transfer</li>
+<li><strong>num_reps_3d</strong>: this is the number of 2D transfers that make up the three-dimensional transfer</li>
+</ul>
 <p><img alt="3D_transfer_example" src="../../images/3d_transfer_example.png" /></p>
 <p>As shown in the above image, the 3D transfer is composed of several (nmm_reps_3d) 2D transfers. The yellow arrows represent the 3D strides.
-In this case we have:
-- <strong>src_stride</strong>=4
-- <strong>dst_stride</strong>=8
-- <strong>length</strong>=2
-- <strong>src_stride_3d</strong>=16
-- <strong>dst_stride_3d</strong>=8</p>
+In this case we have:</p>
+<ul>
+<li><strong>src_stride</strong>=4</li>
+<li><strong>dst_stride</strong>=8</li>
+<li><strong>length</strong>=2</li>
+<li><strong>src_stride_3d</strong>=16</li>
+<li><strong>dst_stride_3d</strong>=8</li>
+</ul>
 <p>Also, notice that strides (both 2D and 3D) can be different between the source and the destination memory regions.</p>
-<h1 id="deeploy-support">Deeploy support</h1>
+<h2 id="deeploy-support">Deeploy support</h2>
 <p>iDMA is partially supported inside Deeploy as well (only 1D transfers for now). Can be found here: https://github.com/FondazioneChipsIT/Deeploy/commits/chips-it/</p>
 <p>At the moment, only simulation on the pulp-open + iDMA rtl platform is supported (gvsoc model needs to be updated).</p>
-<p>At the moment, iDMA is supported in Deeploy. The following features are tested:
-- 1D/2D transfers
-- clock gating control</p>
-<h3 id="note">Note:</h3>
+<p>At the moment, iDMA is supported in Deeploy. The following features are tested:</p>
+<ul>
+<li>1D/2D transfers</li>
+<li>clock gating control</li>
+</ul>
+<h3 id="note">Note</h3>
 <ul>
 <li>In Deeploy the pulp-sdk drivers for iDMA are used.</li>
 </ul>
