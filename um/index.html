@@ -23,7 +23,7 @@
     
     
       
-        <title>Index - iDMA</title>
+        <title>My Project Documentation - iDMA</title>
       
     
     
@@ -63,6 +63,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#idma-architecture-documentation" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -95,7 +100,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Index
+              My Project Documentation
             
           </span>
         </div>
@@ -723,6 +728,44 @@
   
   
   
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#topics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Topics
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -742,7 +785,16 @@
   
 
 
-  <h1>Index</h1>
+<h1 id="idma-architecture-documentation">iDMA Architecture Documentation</h1>
+<h2 id="overview">Overview</h2>
+<p>What follows is the general structure of the current iDMA instance inside the pulp cluster.</p>
+<h3 id="topics">Topics</h3>
+<ul>
+<li>iDMA Wrapper: instantiation of the physical channels + interface with the pulp cluster.</li>
+<li>iDMA Frontend: registers and configuration.</li>
+<li>iDMA Midend: handling of multi-dimensional transfers.</li>
+<li>iDMA Backend: handling of 1D iDMA transfers and read/write protocols.</li>
+</ul>
 
 
 
@@ -750,7 +802,8 @@
 
 
 
-
+  
+  
 
 
 
