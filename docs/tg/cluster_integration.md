@@ -12,6 +12,6 @@ Currently, the iDMA is instantiated within the pulp cluster as follows:
 - Clock gating:
     - The clock gating cell is controlled by the cluster control unit. This allows to completely shut down the iDMA clock, thus achieving lower power consumption when the IP is not being used.
 
-## Pulp Cluster integration scheme:
+## Pulp Cluster integration scheme
 
 ![iDMA Cluster Integration](../images/iDMA_Cluster_integration.drawio.svg)
