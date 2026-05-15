@@ -1108,9 +1108,10 @@ make clean all run platform=rtl # Compile and execute the test in console mode o
 </code></pre>
 <p>While most of the flow is identical to the pulp-runtime one, a few specifications:</p>
 <ul>
-<li>Use <em>run_gui</em> to launch graphical mode</li>
+<li>Use <strong><em>run_gui</em></strong> to launch graphical mode</li>
 <li>GVSOC simulation is not supported yet for this instance of iDMA</li>
 <li>Randomized stimuli generation works the same way as pulp-runtime</li>
+<li>Multi-core execution can be enabled through MULTI_CORE_S and MULTI_CORE_P</li>
 <li>Use DEBUG_TEST=1 to enable printfs</li>
 </ul>
 
