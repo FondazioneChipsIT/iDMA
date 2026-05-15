@@ -11,6 +11,8 @@ Currently, the iDMA is instantiated within the pulp cluster as follows:
     - This means that up to 8 transfer configurations can be saved for each direction --> 16 total transfers can be configured into the iDMA at the same time.
 - Clock gating:
     - The clock gating cell is controlled by the cluster control unit. This allows to completely shut down the iDMA clock, thus achieving lower power consumption when the IP is not being used.
+- Burst Length:
+    - This RTL parameter specifies the burst lenght for the AXI transfers: set to 256 bytes.
 
 ## Pulp Cluster integration scheme
 
