@@ -353,6 +353,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#note" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Note
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#dependencies" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -411,16 +422,33 @@
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#using-deeploy-inside-pulp-open" class="md-nav__link">
+    <nav class="md-nav" aria-label="Building and simulating iDMA in Pulp-SDK and Pulp-runtime">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pulp-runtime-flow" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Using Deeploy inside pulp-open
+        Pulp-runtime flow
       
     </span>
   </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pulp-sdk-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pulp-sdk flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -857,6 +885,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#note" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Note
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#dependencies" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -915,16 +954,33 @@
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#using-deeploy-inside-pulp-open" class="md-nav__link">
+    <nav class="md-nav" aria-label="Building and simulating iDMA in Pulp-SDK and Pulp-runtime">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pulp-runtime-flow" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Using Deeploy inside pulp-open
+        Pulp-runtime flow
       
     </span>
   </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pulp-sdk-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pulp-sdk flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -949,16 +1005,114 @@
 
 
 <h1 id="getting-started-on-idma">Getting started on iDMA</h1>
-<p>Describe repository structure here:</p>
-<p><strong><em>insert table</em></strong></p>
+<p>iDMA can be cloned as a Bender dependency from one of the supported platforms. The most tested until now are:</p>
+<ul>
+<li><a href="https://github.com/FondazioneChipsIT/pulp">pulp-open</a> </li>
+<li><a href="https://github.com/FondazioneChipsIT/pulp_cluster">pulp-cluster</a></li>
+</ul>
+<p>Cloning the IP is not enough, almost all of iDMA rtl code needs to be generated. So, the following rule needs to be called in order to successfully compile the IP:</p>
+<pre><code class="language-Makefile">venv:
+    python3 -m venv $(VENV) &amp;&amp; \
+    $(VENV)/bin/python -m pip install -U pip &amp;&amp; \
+    $(VENV)/bin/python -m pip install -r $(shell bender path idma)/requirements.txt
+
+generate_idma_rtl: venv
+    . &quot;$(VENV)/bin/activate&quot; &amp;&amp; $(MAKE) -C $(shell bender path idma) idma_hw_all
+</code></pre>
+<h2 id="note">Note</h2>
+<p>A python environment is strongly encouraged as a mean to successfully generate the rtl for this IP. The <strong>venv</strong> rule is there to ensure this is the case.</p>
+<p>This makes sure that all the needed System Verilog files are generated into the target/rtl folder.</p>
 <h2 id="dependencies">Dependencies</h2>
-<p>List needed IPs here.</p>
+<p>iDMA itself has some hw dependencies, such as:</p>
+<pre><code class="language-yaml">dependencies:
+  axi
+  axi_stream
+  common_cells
+  common_verification
+  register_interface
+  obi
+</code></pre>
 <h2 id="building-supported-rtl-plaforms">Building supported RTL plaforms</h2>
+<p>As mentioned, iDMA RTL code needs to be generated before compiling the chosen rtl platform.</p>
 <h3 id="pulp-cluster">Pulp cluster</h3>
+<p>The current flow for building the RTL pulp cluster platform is the following:</p>
+<pre><code class="language-bash">make init ## Bender clone and checkout + iDMA rtl generation + compile.tcl script creation
+make build ## This compiles the RTL platform based on the compile.tcl generated script
+
+</code></pre>
 <h3 id="pulp-open">Pulp-open</h3>
+<pre><code class="language-bash">make init ## Bender clone and checkout + iDMA rtl generation + compile.tcl script creation
+make build ## This compiles the RTL platform based on the compile.tcl generated script
+
+</code></pre>
 <h2 id="building-and-simulating-idma-in-pulp-sdk-and-pulp-runtime">Building and simulating iDMA in Pulp-SDK and Pulp-runtime</h2>
-<p>List tests actually in place.</p>
-<h2 id="using-deeploy-inside-pulp-open">Using Deeploy inside pulp-open</h2>
+<p>Once the RTL platform has been successfully populated with IPs and compiled, iDMA can be tested at system level within the following software stacks:</p>
+<ul>
+<li><a href="https://github.com/FondazioneChipsIT/pulp-runtime">pulp-runtime</a>: note that only pulp cluster is currently supported on this software stack</li>
+<li><a href="https://github.com/FondazioneChipsIT/pulp-sdk">pulp-sdk</a>: not that only pulp-open is currently supported on this software stack</li>
+</ul>
+<p>Depending on the chosen RTL platform follow one of the listed flows.</p>
+<h3 id="pulp-runtime-flow">Pulp-runtime flow</h3>
+<p>Clone the software stack <a href="https://github.com/FondazioneChipsIT/pulp-runtime">here</a>
+Clone the tests <a href="https://github.com/FondazioneChipsIT/regression_tests">here</a>.
+Then:</p>
+<pre><code class="language-bash"># From the top pulp_cluster dir
+
+# Setup the toolchain, on Chips-IT machines the following is true:
+
+export PULP_RISCV_GCC_TOOLCHAIN=/opt/riscv/pulp-gcc-1.0.16/
+source scripts/vsim.sh # This sets the needed VSIM_PATH env variable
+
+source pulp-runtime/configs/pulp_cluster.sh # This sets the environment for pulp cluster simulation
+
+cd regression_tests/idma_tests/idma_multi_core # Move to the tests directories
+make clean all run # Compile and execute the test in console mode
+</code></pre>
+<p>This sequence of commands executes a basic 1D iDMA test. Some flags can be added:</p>
+<ul>
+<li>gui=1: this opens the Modelsim graphical user interface</li>
+<li>VERBOSE=1: this enables the debug printfs inside the test (disabled by default)</li>
+<li>MULTI_CORE_S=1: this enables the serial multi-core execution, meaning the iDMA is used by all the cores in the cluster one after the other (disabled by default)</li>
+<li>MULTI_CORE_P=1: this enables the parallel multi-core execution, meaning the iDMA is used by all the cores in the cluster in parallel (disabled by default)</li>
+</ul>
+<p>The supported tests are:</p>
+<ul>
+<li><strong>idma_multi_core</strong>: tests the iDMA 1D transfer capabilities</li>
+<li><strong>idma_multi_core_2d</strong>: tests the iDMA 2D transfer capabilities</li>
+<li><strong>idma_multi_core_3d</strong>: tests the iDMA 3D transfer capabilities</li>
+<li><strong>idma_benchmark_tests</strong>: this one allows to test three different scenarios, depending ont the following command-line flags:<ul>
+<li>TX=1: tests a L1 -&gt; L2 1D transfer</li>
+<li>RX=1: tests a L2 -&gt; L1 1D transfer</li>
+<li>TX_RX: tests a L1 -&gt; L2 and a L2 -&gt; L1 transfer in parallel</li>
+<li>IDLE=1: iDMA does nothing, while the transfer is executed by the core</li>
+</ul>
+</li>
+</ul>
+<p>Random stimuli generation is also supported for iDMA testing. While pre-generated stimuli are already available, you can generate your own:</p>
+<pre><code class="language-bash">make stimuli # depending on the chosen test, this generates testcase-specific stimuli
+</code></pre>
+<h3 id="pulp-sdk-flow">Pulp-sdk flow</h3>
+<p>Clone the software stack <a href="https://github.com/FondazioneChipsIT/pulp-sdk">here</a> (tests are already included).</p>
+<p>Then:</p>
+<pre><code class="language-bash"># From the top pulp_open dir
+
+# Setup the toolchain, on Chips-IT machines the following is true:
+
+export PULP_RISCV_GCC_TOOLCHAIN=/opt/riscv/pulp-gcc-1.0.16/
+source setup/vsim.sh # This sets the needed VSIM_PATH env variable
+
+source pulp-sdk/configs/pulp_open.sh # This sets the environment for pulp open simulation
+
+cd tests/idma/idma_1d # Move to the tests directories
+make clean all run platform=rtl # Compile and execute the test in console mode on the rtl platform
+</code></pre>
+<p>While most of the flow is identical to the pulp-runtime one, a few specifications:</p>
+<ul>
+<li>Use <em>run_gui</em> to launch graphical mode</li>
+<li>GVSOC simulation is not supported yet for this instance of iDMA</li>
+<li>Randomized stimuli generation works the same way as pulp-runtime</li>
+<li>Use DEBUG_TEST=1 to enable printfs</li>
+</ul>
 
 
 
