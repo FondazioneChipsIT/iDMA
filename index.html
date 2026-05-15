@@ -21,7 +21,7 @@
     
     
       
-        <title>Index - iDMA</title>
+        <title>iDMA - iDMA</title>
       
     
     
@@ -98,7 +98,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Index
+              iDMA
             
           </span>
         </div>
@@ -228,6 +228,8 @@
       
         
       
+        
+      
     
     
     
@@ -297,6 +299,34 @@
     
   
     Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="publications/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Publications
   
 
     
@@ -860,7 +890,6 @@
   
 
 
-<p>View ongoing updated documentation at: https://fondazionechipsit.github.io/iDMA/</p>
 <h1 id="idma">iDMA</h1>
 <p><a href="https://github.com/pulp-platform/idma/actions/workflows/gitlab-ci.yml?query=branch%3Amaster"><img alt="CI status" src="https://github.com/pulp-platform/idma/actions/workflows/gitlab-ci.yml/badge.svg?branch=master" /></a>
 <a href="CHANGELOG.md"><img alt="GitHub tag (latest SemVer)" src="https://img.shields.io/github/v/tag/pulp-platform/iDMA?color=blue&amp;label=current&amp;sort=semver" /></a>
@@ -870,19 +899,23 @@ architecture targeting a wide range of platforms from ultra-low power edge nodes
 computing systems. iDMA is part of the <a href="https://pulp-platform.org/">PULP (Parallel Ultra-Low-Power) platform</a>,
 where it is used as a cluster level DMA in the <a href="https://github.com/pulp-platform/snitch">Snitch Cluster</a>
 and in the <a href="https://github.com/pulp-platform/pulp">PULP Cluster</a>.</p>
-<p>iDMA currently implements the following protocols:
-- <a href="https://developer.arm.com/documentation/ihi0022/hc/?lang=en">AXI4</a><a href="https://github.com/pulp-platform/axi">+ATOPs from AXI5</a>
-- <a href="https://developer.arm.com/documentation/ihi0022/hc/?lang=en">AXI4 Lite</a>
-- <a href="https://developer.arm.com/documentation/ihi0051/b/?lang=en">AXI4 Stream</a>
-- <a href="https://github.com/openhwgroup/programs/blob/master/TGs/cores-task-group/obi/OBI-v1.5.0.pdf">OBI v1.5.0</a>
-- <a href="https://starfivetech.com/uploads/tilelink_spec_1.8.1.pdf">TileLink UH v1.8.1</a></p>
+<p>iDMA currently implements the following protocols:</p>
+<ul>
+<li><a href="https://developer.arm.com/documentation/ihi0022/hc/?lang=en">AXI4</a><a href="https://github.com/pulp-platform/axi">+ATOPs from AXI5</a></li>
+<li><a href="https://developer.arm.com/documentation/ihi0022/hc/?lang=en">AXI4 Lite</a></li>
+<li><a href="https://developer.arm.com/documentation/ihi0051/b/?lang=en">AXI4 Stream</a></li>
+<li><a href="https://github.com/openhwgroup/programs/blob/master/TGs/cores-task-group/obi/OBI-v1.5.0.pdf">OBI v1.5.0</a></li>
+<li><a href="https://starfivetech.com/uploads/tilelink_spec_1.8.1.pdf">TileLink UH v1.8.1</a></li>
+</ul>
 <h2 id="modular-architecture">Modular Architecture</h2>
-<p>iDMA is centered around the idea to split the DMA engine in 3 distinct parts:
-- <strong>Frontend:</strong> The frontend implements the communication with the platform and emits transfer requests
-- <strong>Midend:</strong> Midend(s) transform a transfer request from the frontend to generic 1D transfers,
-              which can be handled by the backend.
-- <strong>Bakend:</strong> The backend gets a 1D transfer <code>(src_addr, dst_addr, length)</code> and executes it
-              on the transport protocol's manager interface.</p>
+<p>iDMA is centered around the idea to split the DMA engine in 3 distinct parts:</p>
+<ul>
+<li><strong>Frontend:</strong> The frontend implements the communication with the platform and emits transfer requests</li>
+<li><strong>Midend:</strong> Midend(s) transform a transfer request from the frontend to generic 1D transfers,
+              which can be handled by the backend.</li>
+<li><strong>Bakend:</strong> The backend gets a 1D transfer <code>(src_addr, dst_addr, length)</code> and executes it
+              on the transport protocol's manager interface.</li>
+</ul>
 <p>The interface between the parts are well-defined, making it easy to adapt to a new system or to add
 new capabilities.</p>
 <h2 id="documentation">Documentation</h2>
