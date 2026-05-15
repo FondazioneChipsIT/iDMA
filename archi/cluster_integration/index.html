@@ -9,25 +9,25 @@
       
       
       
-        <link rel="prev" href="../publications/">
+        <link rel="prev" href="../">
       
       
-        <link rel="next" href="sim/">
+        <link rel="next" href="../opentitan_integration/">
       
       
         
       
       
-      <link rel="icon" href="../assets/images/favicon.png">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
     
     
       
-        <title>My Project Documentation - iDMA</title>
+        <title>Cluster Integration - iDMA</title>
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.618322db.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.618322db.min.css">
       
       
 
@@ -46,7 +46,7 @@
       
     
     
-    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -64,7 +64,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#pulp-cluster-integration-and-simulation" class="md-skip">
+        <a href="#integration-in-pulp-cluster" class="md-skip">
           Skip to content
         </a>
       
@@ -80,7 +80,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="iDMA" class="md-header__button md-logo" aria-label="iDMA" data-md-component="logo">
+    <a href="../.." title="iDMA" class="md-header__button md-logo" aria-label="iDMA" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -100,7 +100,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              My Project Documentation
+              Cluster Integration
             
           </span>
         </div>
@@ -190,7 +190,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="iDMA" class="md-nav__button md-logo" aria-label="iDMA" data-md-component="logo">
+    <a href="../.." title="iDMA" class="md-nav__button md-logo" aria-label="iDMA" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -249,7 +249,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href=".." class="md-nav__link ">
+            <a href="../.." class="md-nav__link ">
               
   
   
@@ -293,7 +293,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../gs/" class="md-nav__link">
+      <a href="../../gs/" class="md-nav__link">
         
   
   
@@ -321,7 +321,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../publications/" class="md-nav__link">
+      <a href="../../publications/" class="md-nav__link">
         
   
   
@@ -368,6 +368,14 @@
       
         
       
+        
+      
+        
+      
+        
+      
+        
+      
     
     
     
@@ -385,14 +393,14 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="./" class="md-nav__link md-nav__link--active">
+            <a href="../" class="md-nav__link ">
               
   
   
   <span class="md-ellipsis">
     
   
-    Targets
+    Architecture
   
 
     
@@ -403,7 +411,7 @@
             </a>
             
               
-              <label class="md-nav__link md-nav__link--active" for="__nav_2" id="__nav_2_label" tabindex="">
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
@@ -414,7 +422,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Targets
+    Architecture
   
 
           </label>
@@ -426,17 +434,103 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="sim/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cluster Integration
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
   <span class="md-ellipsis">
     
   
-    Simulation
+    Cluster Integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#pulp-cluster-integration-scheme" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pulp Cluster integration scheme
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../opentitan_integration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security Island Integration
   
 
     
@@ -457,14 +551,98 @@
   
   
     <li class="md-nav__item">
-      <a href="cluster_integration/" class="md-nav__link">
+      <a href="../arch/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Cluster Integration
+    iDMA Top Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../frontend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    iDMA Frontend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../midend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    iDMA Midend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../backend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    iDMA Backend
   
 
     
@@ -529,7 +707,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../um/" class="md-nav__link ">
+            <a href="../../um/" class="md-nav__link ">
               
   
   
@@ -573,7 +751,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../um/arch/" class="md-nav__link">
+      <a href="../../um/arch.md" class="md-nav__link">
         
   
   
@@ -601,7 +779,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../um/opentitan_integration/" class="md-nav__link">
+      <a href="../../um/opentitan_integration.md" class="md-nav__link">
         
   
   
@@ -629,7 +807,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../um/frontend/" class="md-nav__link">
+      <a href="../../um/frontend.md" class="md-nav__link">
         
   
   
@@ -657,7 +835,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../um/midend/" class="md-nav__link">
+      <a href="../../um/midend.md" class="md-nav__link">
         
   
   
@@ -685,7 +863,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../um/backend/" class="md-nav__link">
+      <a href="../../um/backend.md" class="md-nav__link">
         
   
   
@@ -713,14 +891,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../um/sw/" class="md-nav__link">
+      <a href="../../um/sim/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Software Stack
+    Simulation
   
 
     
@@ -768,30 +946,13 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#pulp-cluster-integration-scheme" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Pulp Cluster integration scheme
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Overview">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#topics" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Topics
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -815,23 +976,35 @@
   
 
 
-<h1 id="pulp-cluster-integration-and-simulation">Pulp Cluster Integration and Simulation</h1>
-<h2 id="overview">Overview</h2>
-<p>What follows is the block diagram of the iDMA integration inside the top of the pulp cluster and insight into the simulation process for iDMA.</p>
-<h3 id="topics">Topics</h3>
+<h1 id="integration-in-pulp-cluster">Integration in Pulp Cluster</h1>
+<p>Currently, the iDMA is instantiated within the pulp cluster as follows:</p>
 <ul>
-<li>Pulp cluster integration: block diagram</li>
-<li>iDMA Simulation: code examples and multidimensional transfer diagrams.</li>
+<li>10 Master Ports:<ul>
+<li>8 Cores</li>
+<li>2 PE</li>
 </ul>
+</li>
+<li>1 Bidirectional Stream:<ul>
+<li>This is to be intended as two physical channels that can work in parallel towards L1 and towards L2.</li>
+</ul>
+</li>
+<li>Fifo Depth set to 8:<ul>
+<li>This means that up to 8 transfer configurations can be saved for each direction --&gt; 16 total transfers can be configured into the iDMA at the same time.</li>
+</ul>
+</li>
+<li>Clock gating:<ul>
+<li>The clock gating cell is controlled by the cluster control unit. This allows to completely shut down the iDMA clock, thus achieving lower power consumption when the IP is not being used.</li>
+</ul>
+</li>
+</ul>
+<h2 id="pulp-cluster-integration-scheme">Pulp Cluster integration scheme</h2>
+<p><img alt="iDMA Cluster Integration" src="../../images/iDMA_Cluster_integration.drawio.svg" /></p>
 
 
 
 
 
 
-
-  
-  
 
 
 
@@ -855,7 +1028,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../publications/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Publications">
+          <a href="../" class="md-footer__link md-footer__link--prev" aria-label="Previous: Architecture">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -865,20 +1038,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                Publications
+                Architecture
               </div>
             </div>
           </a>
         
         
           
-          <a href="sim/" class="md-footer__link md-footer__link--next" aria-label="Next: Simulation">
+          <a href="../opentitan_integration/" class="md-footer__link md-footer__link--next" aria-label="Next: Security Island Integration">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Simulation
+                Security Island Integration
               </div>
             </div>
             <div class="md-footer__button md-icon">
@@ -915,10 +1088,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.expand", "navigation.tracking", "navigation.sections", "navigation.indexes", "navigation.footer"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.expand", "navigation.tracking", "navigation.sections", "navigation.indexes", "navigation.footer"], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      <script src="../../assets/javascripts/bundle.e71a0d61.min.js"></script>
       
     
   </body>
