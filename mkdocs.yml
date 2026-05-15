@@ -25,15 +25,14 @@ nav:
   - index.md
   - Getting Started: gs.md
   - Publications: publications.md
-- Targets:
-  - tg/index.md
-  - Simulation: tg/sim.md
-  - Cluster Integration: tg/cluster_integration.md
+- Architecture:
+  - archi/index.md
+  - Cluster Integration: archi/cluster_integration.md
+  - Security Island Integration: archi/opentitan_integration.md
+  - iDMA Top Architecture: archi/arch.md
+  - iDMA Frontend: archi/frontend.md
+  - iDMA Midend: archi/midend.md
+  - iDMA Backend: archi/backend.md
 - User Manual:
   - um/index.md
-  - Architecture: um/arch.md
-  - Top Earlgrey Architecture: um/opentitan_integration.md
-  - Frontend: um/frontend.md
-  - Midend: um/midend.md
-  - Backend: um/backend.md
-  - Software Stack: um/sw.md
+  - Simulation: um/sim.md
