@@ -12,9 +12,9 @@ On both sw stacks, the following testcases are supported:
 - Multi-core modes: all 8 cores can program the iDMA. Depending on whether MULTI_CORE_S or MULTI_CORE_P is enabled, this happens in a serial or parallel way.
 - All transfer directions are tested.
 - Stimuli for each transfer are generated through python scripts, meaning:
-    - 1D Transfers: size, src_addr, dst_addr
-    - 2D Transfers: size, src_addr, dst_addr, src_stride, dst_stride
-    - 3D Transfers: size, src_addr, dst_addr, src_stride, dst_stride, src_stride_3d, dst_stride_3d, number of 3d repetitions
+  - 1D Transfers: size, src_addr, dst_addr
+  - 2D Transfers: size, src_addr, dst_addr, src_stride, dst_stride
+  - 3D Transfers: size, src_addr, dst_addr, src_stride, dst_stride, src_stride_3d, dst_stride_3d, number of 3d repetitions
 
 **TODO**: allow for burst length configurability directly from the drivers.
 
@@ -54,6 +54,54 @@ In this case an individual wait has been used for blocking the execution until t
 # Disable the iDMA frontend clock once the transfer has completed
     plp_idma_disable_clk();
 ```
+
+## Protocol configuration
+
+The iDMA instance inside pulp cluster currently supports three transfer directions:
+
+- L1 -> L2
+  - This is done on the stream 0 and by configurting the following protocols:
+    - Source protocol: OBI
+    - Destination protocol: AXI
+- L2 -> L1
+  - This is done on the stream 1 and by configuring the following protocols:
+    - Source protocol: AXI
+    - Destination protocol: OBI
+- L1 -> L1
+  - This is done on the stream 1 and by configuring the following protocols:
+    - Source protocol: OBI
+    - Destination protocol OBI
+
+Protcol configuration is transparent to the user, who needs just to specify the intended direction of the transfer.
+From an HW perspective, this means having two separate physical channels, which instantiate different backend modules:
+
+- **COPY_IN CHANNEL**:
+  - This channel makes use of the *idma_backend_r_obi_rw_init_w_axi* module, which indeeds allow read operations through OBI and write opoerations through AXI.
+- **COPY_OUT CHANNEL**:
+  - This channel makes use of the *idma_backend_r_axi_rw_init_rw_obi* module, which indeeds allow read operations both through AXI and OBI and write operations through OBI.
+
+  The protocol configuration is done in the drivers through default configurations, as follows:
+
+  ```C
+    #define IDMA_DEFAULT_CONFIG 0x0
+    #define IDMA_DEFAULT_CONFIG_L1TOL2 (IDMA_DEFAULT_CONFIG | (IDMA_PROT_OBI << IDMA_REG32_3D_CONF_SRC_PROTOCOL_OFFSET) | (IDMA_PROT_AXI << IDMA_REG32_3D_CONF_DST_PROTOCOL_OFFSET))
+    #define IDMA_DEFAULT_CONFIG_L2TOL1 (IDMA_DEFAULT_CONFIG | (IDMA_PROT_AXI << IDMA_REG32_3D_CONF_SRC_PROTOCOL_OFFSET) | (IDMA_PROT_OBI << IDMA_REG32_3D_CONF_DST_PROTOCOL_OFFSET))
+    #define IDMA_DEFAULT_CONFIG_L1TOL1 (IDMA_DEFAULT_CONFIG | (IDMA_PROT_OBI << IDMA_REG32_3D_CONF_SRC_PROTOCOL_OFFSET) | (IDMA_PROT_OBI << IDMA_REG32_3D_CONF_DST_PROTOCOL_OFFSET))
+
+    #define IDMA_DEFAULT_CONFIG_2D 0x400
+    #define IDMA_DEFAULT_CONFIG_L1TOL2_2D (IDMA_DEFAULT_CONFIG_2D | (IDMA_PROT_OBI << IDMA_REG32_3D_CONF_SRC_PROTOCOL_OFFSET) | (IDMA_PROT_AXI << IDMA_REG32_3D_CONF_DST_PROTOCOL_OFFSET))
+    #define IDMA_DEFAULT_CONFIG_L2TOL1_2D (IDMA_DEFAULT_CONFIG_2D | (IDMA_PROT_AXI << IDMA_REG32_3D_CONF_SRC_PROTOCOL_OFFSET) | (IDMA_PROT_OBI << IDMA_REG32_3D_CONF_DST_PROTOCOL_OFFSET))
+    #define IDMA_DEFAULT_CONFIG_L1TOL1_2D (IDMA_DEFAULT_CONFIG_2D | (IDMA_PROT_OBI << IDMA_REG32_3D_CONF_SRC_PROTOCOL_OFFSET) | (IDMA_PROT_OBI << IDMA_REG32_3D_CONF_DST_PROTOCOL_OFFSET))
+
+    #define IDMA_DEFAULT_CONFIG_3D 0x800
+    #define IDMA_DEFAULT_CONFIG_L1TOL2_3D (IDMA_DEFAULT_CONFIG_3D | (IDMA_PROT_OBI << IDMA_REG32_3D_CONF_SRC_PROTOCOL_OFFSET) | (IDMA_PROT_AXI << IDMA_REG32_3D_CONF_DST_PROTOCOL_OFFSET))
+    #define IDMA_DEFAULT_CONFIG_L2TOL1_3D (IDMA_DEFAULT_CONFIG_3D | (IDMA_PROT_AXI << IDMA_REG32_3D_CONF_SRC_PROTOCOL_OFFSET) | (IDMA_PROT_OBI << IDMA_REG32_3D_CONF_DST_PROTOCOL_OFFSET))
+    #define IDMA_DEFAULT_CONFIG_L1TOL1_3D (IDMA_DEFAULT_CONFIG_3D | (IDMA_PROT_OBI << IDMA_REG32_3D_CONF_SRC_PROTOCOL_OFFSET) | (IDMA_PROT_OBI << IDMA_REG32_3D_CONF_DST_PROTOCOL_OFFSET))
+  ```
+
+  These default configurations are automatically set into the iDMA registers when the API for the specified transfer direction is called.
+
+## Transfer Examples
 
 A one-dimensional transfer is pretty simple in terms of parameters that need to be specified:
 
