@@ -752,6 +752,28 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#protocol-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Protocol configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#transfer-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Transfer Examples
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#deeploy-support" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -833,6 +855,28 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#protocol-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Protocol configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#transfer-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Transfer Examples
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#deeploy-support" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -892,12 +936,10 @@
 <li>Transfer dimensions: 1D, 2D and 3D.</li>
 <li>Multi-core modes: all 8 cores can program the iDMA. Depending on whether MULTI_CORE_S or MULTI_CORE_P is enabled, this happens in a serial or parallel way.</li>
 <li>All transfer directions are tested.</li>
-<li>Stimuli for each transfer are generated through python scripts, meaning:<ul>
+<li>Stimuli for each transfer are generated through python scripts, meaning:</li>
 <li>1D Transfers: size, src_addr, dst_addr</li>
 <li>2D Transfers: size, src_addr, dst_addr, src_stride, dst_stride</li>
 <li>3D Transfers: size, src_addr, dst_addr, src_stride, dst_stride, src_stride_3d, dst_stride_3d, number of 3d repetitions</li>
-</ul>
-</li>
 </ul>
 <p><strong>TODO</strong>: allow for burst length configurability directly from the drivers.</p>
 <p>iDMA tests in regression tests repository: https://github.com/FondazioneChipsIT/regression_tests/tree/new_iDMA_tests/idma_tests</p>
@@ -927,6 +969,55 @@
 # Disable the iDMA frontend clock once the transfer has completed
     plp_idma_disable_clk();
 </code></pre>
+<h2 id="protocol-configuration">Protocol configuration</h2>
+<p>The iDMA instance inside pulp cluster currently supports three transfer directions:</p>
+<ul>
+<li>L1 -&gt; L2</li>
+<li>This is done on the stream 0 and by configurting the following protocols:<ul>
+<li>Source protocol: OBI</li>
+<li>Destination protocol: AXI</li>
+</ul>
+</li>
+<li>L2 -&gt; L1</li>
+<li>This is done on the stream 1 and by configuring the following protocols:<ul>
+<li>Source protocol: AXI</li>
+<li>Destination protocol: OBI</li>
+</ul>
+</li>
+<li>L1 -&gt; L1</li>
+<li>This is done on the stream 1 and by configuring the following protocols:<ul>
+<li>Source protocol: OBI</li>
+<li>Destination protocol OBI</li>
+</ul>
+</li>
+</ul>
+<p>Protcol configuration is transparent to the user, who needs just to specify the intended direction of the transfer.
+From an HW perspective, this means having two separate physical channels, which instantiate different backend modules:</p>
+<ul>
+<li><strong>COPY_IN CHANNEL</strong>:</li>
+<li>This channel makes use of the <em>idma_backend_r_obi_rw_init_w_axi</em> module, which indeeds allow read operations through OBI and write opoerations through AXI.</li>
+<li><strong>COPY_OUT CHANNEL</strong>:</li>
+<li>This channel makes use of the <em>idma_backend_r_axi_rw_init_rw_obi</em> module, which indeeds allow read operations both through AXI and OBI and write operations through OBI.</li>
+</ul>
+<p>The protocol configuration is done in the drivers through default configurations, as follows:</p>
+<p>```C
+    #define IDMA_DEFAULT_CONFIG 0x0
+    #define IDMA_DEFAULT_CONFIG_L1TOL2 (IDMA_DEFAULT_CONFIG | (IDMA_PROT_OBI &lt;&lt; IDMA_REG32_3D_CONF_SRC_PROTOCOL_OFFSET) | (IDMA_PROT_AXI &lt;&lt; IDMA_REG32_3D_CONF_DST_PROTOCOL_OFFSET))
+    #define IDMA_DEFAULT_CONFIG_L2TOL1 (IDMA_DEFAULT_CONFIG | (IDMA_PROT_AXI &lt;&lt; IDMA_REG32_3D_CONF_SRC_PROTOCOL_OFFSET) | (IDMA_PROT_OBI &lt;&lt; IDMA_REG32_3D_CONF_DST_PROTOCOL_OFFSET))
+    #define IDMA_DEFAULT_CONFIG_L1TOL1 (IDMA_DEFAULT_CONFIG | (IDMA_PROT_OBI &lt;&lt; IDMA_REG32_3D_CONF_SRC_PROTOCOL_OFFSET) | (IDMA_PROT_OBI &lt;&lt; IDMA_REG32_3D_CONF_DST_PROTOCOL_OFFSET))</p>
+<pre><code>#define IDMA_DEFAULT_CONFIG_2D 0x400
+#define IDMA_DEFAULT_CONFIG_L1TOL2_2D (IDMA_DEFAULT_CONFIG_2D | (IDMA_PROT_OBI &lt;&lt; IDMA_REG32_3D_CONF_SRC_PROTOCOL_OFFSET) | (IDMA_PROT_AXI &lt;&lt; IDMA_REG32_3D_CONF_DST_PROTOCOL_OFFSET))
+#define IDMA_DEFAULT_CONFIG_L2TOL1_2D (IDMA_DEFAULT_CONFIG_2D | (IDMA_PROT_AXI &lt;&lt; IDMA_REG32_3D_CONF_SRC_PROTOCOL_OFFSET) | (IDMA_PROT_OBI &lt;&lt; IDMA_REG32_3D_CONF_DST_PROTOCOL_OFFSET))
+#define IDMA_DEFAULT_CONFIG_L1TOL1_2D (IDMA_DEFAULT_CONFIG_2D | (IDMA_PROT_OBI &lt;&lt; IDMA_REG32_3D_CONF_SRC_PROTOCOL_OFFSET) | (IDMA_PROT_OBI &lt;&lt; IDMA_REG32_3D_CONF_DST_PROTOCOL_OFFSET))
+
+#define IDMA_DEFAULT_CONFIG_3D 0x800
+#define IDMA_DEFAULT_CONFIG_L1TOL2_3D (IDMA_DEFAULT_CONFIG_3D | (IDMA_PROT_OBI &lt;&lt; IDMA_REG32_3D_CONF_SRC_PROTOCOL_OFFSET) | (IDMA_PROT_AXI &lt;&lt; IDMA_REG32_3D_CONF_DST_PROTOCOL_OFFSET))
+#define IDMA_DEFAULT_CONFIG_L2TOL1_3D (IDMA_DEFAULT_CONFIG_3D | (IDMA_PROT_AXI &lt;&lt; IDMA_REG32_3D_CONF_SRC_PROTOCOL_OFFSET) | (IDMA_PROT_OBI &lt;&lt; IDMA_REG32_3D_CONF_DST_PROTOCOL_OFFSET))
+#define IDMA_DEFAULT_CONFIG_L1TOL1_3D (IDMA_DEFAULT_CONFIG_3D | (IDMA_PROT_OBI &lt;&lt; IDMA_REG32_3D_CONF_SRC_PROTOCOL_OFFSET) | (IDMA_PROT_OBI &lt;&lt; IDMA_REG32_3D_CONF_DST_PROTOCOL_OFFSET))
+</code></pre>
+<p>```</p>
+<p>These default configurations are automatically set into the iDMA registers when the API for the specified transfer direction is called.</p>
+<h2 id="transfer-examples">Transfer Examples</h2>
 <p>A one-dimensional transfer is pretty simple in terms of parameters that need to be specified:</p>
 <ul>
 <li><strong>src_addr</strong>: this is the starting address in the source memory region</li>
