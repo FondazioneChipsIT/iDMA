@@ -115,6 +115,30 @@ ${params}
         ]
       }
     },
+    {
+      name: "user",
+      desc: "32 bits user field for multicast configuration",
+      swaccess: "rw",
+      hwaccess: "hro",
+      fields: [
+        { bits: "31:0",
+          name: "user",
+          desc: "User field for multicast configuration"
+        }
+      ]
+    },  
+    {
+      name: "collective_op",
+      desc: "4 bits for collective operation selection",
+      swaccess: "rw",
+      hwaccess: "hro",
+      fields: [
+        { bits: "3:0",
+          name: "user",
+          desc: "Collective Operation field"
+        }
+      ]
+    },  
 ${registers}
   ]
 }
