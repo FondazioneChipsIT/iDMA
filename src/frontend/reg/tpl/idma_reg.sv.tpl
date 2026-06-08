@@ -115,6 +115,8 @@ module idma_${identifier} #(
       arb_dma_req[i]${sep}length   = dma_reg2hw[i].length_low.q;
       arb_dma_req[i]${sep}src_addr = dma_reg2hw[i].src_addr_low.q;
       arb_dma_req[i]${sep}dst_addr = dma_reg2hw[i].dst_addr_low.q;
+      arb_dma_req[i]${sep}user[35:4] = dma_reg2hw[i].user.q;
+      arb_dma_req[i]${sep}user[3:0] = dma_reg2hw[i].collective_op.q;
 % else:
       arb_dma_req[i]${sep}length   = {dma_reg2hw[i].length_high.q,   dma_reg2hw[i].length_low.q};
       arb_dma_req[i]${sep}src_addr = {dma_reg2hw[i].src_addr_high.q, dma_reg2hw[i].src_addr_low.q};
