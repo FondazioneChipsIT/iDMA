@@ -1,33 +1,23 @@
-# Copyright 2023 ETH Zurich and University of Bologna.
+# Copyright 2022 ETH Zurich and University of Bologna.
 # Licensed under the Apache License, Version 2.0, see LICENSE for details.
 # SPDX-License-Identifier: Apache-2.0
 
-# Authors:
-# - Paul Scheffler <paulsc@iis.ee.ethz.ch>
-# - Thomas Benz <tbenz@iis.ee.ethz.ch>
+# Author: Paul Scheffler <paulsc@iis.ee.ethz.ch>
 
 name: gitlab-ci
 
-on:
-  workflow_call:
-  workflow_dispatch:
+on: [ push, pull_request, workflow_dispatch ]
 
 jobs:
-
-  check:
+  gitlab-ci:
     runs-on: ubuntu-latest
     timeout-minutes: 200
     steps:
-      -
-        name: Mirror and check
-        uses: pulp-platform/pulp-actions/gitlab-ci@v2
+      - name: Check Gitlab CI
+        uses: pulp-platform/pulp-actions/gitlab-ci@v2.4.1 # update version as needed, not autoupdated
         # Skip on forks or pull requests from forks due to missing secrets.
-        if: >
-          github.repository == 'pulp-platform/idma' &&
-          (github.event_name != 'pull_request' ||
-          github.event.pull_request.head.repo.full_name == github.repository)
+        if: github.repository == 'FondazioneChipsIT/iDMA' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
         with:
-          domain: iis-git.ee.ethz.ch
-          repo: github-mirror/idma
+          domain: gitlab.chips.it
+          repo: digitalresearchline/githubmirrors/iDMA
           token: ${{ secrets.GITLAB_TOKEN }}
-          poll-count: 10800 # (10800/60=180min=3hours)
