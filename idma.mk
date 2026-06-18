@@ -439,15 +439,15 @@ idma_spinx_doc_clean:
 
 .PHONY: idma_nonfree_init idma_nonfree_clean
 
-IDMA_NONFREE_REMOTE ?= git@iis-git.ee.ethz.ch:bslk/idma/idma-non-free.git
+IDMA_NONFREE_REMOTE ?= git@gitlab.chips.it:digitalresearchline/chips-restricted/iDMA-nonfree.git
 IDMA_NONFREE_DIR    ?= $(IDMA_ROOT)/nonfree
-IDMA_NONFREE_COMMIT ?= deploy
+IDMA_NONFREE_COMMIT ?= main
 
 idma_nonfree_init:
 	git clone $(IDMA_NONFREE_REMOTE) $(IDMA_NONFREE_DIR)
 	cd $(IDMA_NONFREE_DIR) && git checkout $(IDMA_NONFREE_COMMIT)
 
--include $(IDMA_NONFREE_DIR)/nonfree.mk
+# -include $(IDMA_NONFREE_DIR)/nonfree.mk
 
 idma_nonfree_clean:
 	rm -rf $(IDMA_NONFREE_DIR)
