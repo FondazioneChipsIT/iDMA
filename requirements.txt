@@ -9,4 +9,9 @@ sphinx-rtd-theme
 recommonmark
 sphinxcontrib-svg2pdfconverter
 pylint
+<<<<<<< HEAD
 setuptools<79
+=======
+setuptools==80.9.0
+flatdict
+>>>>>>> c90311f ([CI] Re-add flatdict)
