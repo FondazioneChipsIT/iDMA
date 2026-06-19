@@ -15,6 +15,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 200
     steps:
+      - name: Install Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9'
+          cache: 'pip'
       - name: Check Gitlab CI
         uses: pulp-platform/pulp-actions/gitlab-ci@v2.4.1 # update version as needed, not autoupdated
         # Skip on forks or pull requests from forks due to missing secrets.
