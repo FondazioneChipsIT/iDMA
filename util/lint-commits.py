@@ -96,8 +96,8 @@ def lint_commit_message(commit):
     # We didn't get an area prefix, so just make sure the message started with a
     # capital letter.
     if summary_line_split_len == 1:
-        if not re.match(r'[A-Z]', lines[0]):
-            error("The summary line must start with a capital letter.", commit)
+        if not re.match(r'^\[[^\]]+\]', lines[0]):
+            error("The summary line must start with [TOPIC].", commit)
             success = False
     # The user specified an area on which she worked.
     elif summary_line_split_len == 2:
