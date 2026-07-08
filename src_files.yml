@@ -1,0 +1,27 @@
+idma:
+  incdirs: [
+    ../common_cells/include/,
+    ../obi/include/,
+    ../register_interface/include/,
+    ../../rtl/includes,
+    src/include,
+    target/rtl/include,
+    test,
+  ]
+  files: [
+    src/idma_pkg.sv,
+    src/backend/idma_axi_read.sv,
+    src/backend/idma_axi_write.sv,
+    src/backend/idma_channel_coupler.sv,
+    src/backend/idma_dataflow_element.sv,
+    src/backend/idma_error_handler.sv,
+    src/backend/idma_init_read.sv,
+    src/backend/idma_init_write.sv,
+    src/backend/idma_legalizer_page_splitter.sv,
+    src/backend/idma_legalizer_pow2_splitter.sv,
+    src/backend/idma_obi_read.sv,
+    src/backend/idma_obi_write.sv,
+    target/rtl/idma_generated.sv,
+    src/midend/idma_nd_midend.sv,
+    src/frontend/idma_transfer_id_gen.sv,
+  ]
