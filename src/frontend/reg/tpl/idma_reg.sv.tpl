@@ -64,7 +64,7 @@ module idma_${identifier} #(
       stream_idx_o = '0;
       for (int r = 0; r < NumRegs; r++) begin
           for (int c = 0; c < NumStreams; c++) begin
-              if (dma_reg2hw[r].next_id[c].re) begin
+              if ((dma_reg2hw[r].next_id[c].re) || (dma_reg2hw[r].commit_job[c].qe)) begin
                   stream_idx_o = c;
               end
           end
@@ -88,6 +88,7 @@ module idma_${identifier} #(
     );
 
     logic read_happens;
+    logic job_commit;
     // DMA backpressure
     always_comb begin : proc_dma_backpressure
       // ready signal
@@ -99,11 +100,14 @@ module idma_${identifier} #(
 
     always_comb begin : proc_launch
         read_happens = 1'b0;
+        job_commit = 1'b0;
         for (int c = 0; c < NumStreams; c++) begin
             read_happens |= dma_reg2hw[i].next_id[c].re;
+            job_commit   |= dma_reg2hw[i].commit_job[c].qe;
         end
-        arb_valid[i] = read_happens;
     end
+
+    assign arb_valid[i] = read_happens | job_commit;
 
     // assign request struct
     always_comb begin : proc_hw_req_conv
