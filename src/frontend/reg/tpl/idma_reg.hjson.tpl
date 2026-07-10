@@ -122,11 +122,11 @@ ${params}
         hwaccess: "hro",
         hwqe: "true",
         count: "2",
-        cname: "conf_commit",
+        cname: "commit_job",
         compact: "false",
         fields: [
           { bits: "0",
-            name: "next_id",
+            name: "commit_job",
             desc: "Commits a job configuration."
           }
         ]
