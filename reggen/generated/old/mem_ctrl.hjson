@@ -1,0 +1,77 @@
+// Memory Controller Register File
+{
+  name: "mem_ctrl",
+  clock_primary: "clk_i",
+  reset_primary: "rst_ni",
+  bus_interfaces: [
+    { protocol: "reg_iface", direction: "device" }
+  ],
+  regwidth: "32",
+  registers: [
+    {
+      name: "conf",
+      desc: "Memory controller configuration",
+      swaccess: "rw",
+      hwaccess: "hro",
+      fields: [
+        { bits: "1:0", name: "protocol",         desc: "Protocol type",        resval: "0" }
+        { bits: "4:2", name: "transaction_type",  desc: "Transaction type",     resval: "0" }
+        { bits: "8:5", name: "response_type",     desc: "Response type",        resval: "0" }
+      ]
+    }
+    {
+      name: "data_size",
+      desc: "Transfer size",
+      swaccess: "rw",
+      hwaccess: "hro",
+      fields: [
+        { bits: "9:0", name: "data_size", desc: "Transfer size in bytes", resval: "0" }
+      ]
+    }
+    {
+      name: "external_address",
+      desc: "External address",
+      swaccess: "rw",
+      hwaccess: "hro",
+      fields: [
+        { bits: "31:0", name: "external_address", desc: "External address", resval: "0" }
+      ]
+    }
+    {
+      name: "internal_address",
+      desc: "Internal address",
+      swaccess: "rw",
+      hwaccess: "hro",
+      fields: [
+        { bits: "31:0", name: "internal_address", desc: "Internal address", resval: "0" }
+      ]
+    }
+    {
+      name: "transaction_valid",
+      desc: "Launch transaction",
+      swaccess: "rw",
+      hwaccess: "hro",
+      hwqe: "true",
+      fields: [
+        {
+          bits: "0",
+          name: "transaction_valid",
+          desc: "Transaction valid",
+          resval: "0"
+        }
+      ]
+    }
+    {
+      name: "status",
+      desc: "Controller status",
+      swaccess: "ro",
+      hwaccess: "hwo",   // era "hrw": l'HW scrive soltanto, non deve rileggere
+      hwext: "true",
+      fields: [
+        { bits: "0", name: "busy",  desc: "Controller busy" }
+        { bits: "1", name: "done",  desc: "Transaction completed" }
+        { bits: "2", name: "error", desc: "Transaction error" }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,212 @@
+// Memory Controller Register File
+{
+  name: "mem_ctrl",
+  clock_primary: "clk_i",
+  reset_primary: "rst_ni",
+  bus_interfaces: [
+    { protocol: "reg_iface", direction: "device" }
+  ],
+  regwidth: "32",
+  registers: [
+    // --- Controllo globale periferica ---
+    {
+      name: "cg_rst",
+      desc: "Clock gate and reset control",
+      swaccess: "rw",
+      hwaccess: "hro",
+      fields: [
+        { bits: "0", name: "clock_gate_en", desc: "Clock gate enable", resval: "0" }
+        { bits: "1", name: "rst_n",         desc: "Peripheral reset (1=out of reset)", resval: "0" }
+      ]
+    }
+
+    // --- Config statica one-time ---
+    {
+      name: "timing_cfg",
+      desc: "PHY timing configuration",
+      swaccess: "rw",
+      hwaccess: "hro",
+      fields: [
+        { bits: "9:0",  name: "latency_access",     desc: "Access latency",            resval: "0" }
+        { bits: "13:10", name: "read_write_recovery", desc: "Read/write recovery cycles", resval: "0" }
+        { bits: "16:14", name: "rwds_delay_line",    desc: "RWDS delay line",           resval: "0" }
+        { bits: "17",    name: "additional_latency_autocheck_en", desc: "Additional latency autocheck enable", resval: "0" }
+        { bits: "31:18", name: "cs_max",             desc: "Max chip-select assertion time", resval: "0" }
+      ]
+    }
+    {
+      name: "clk_div",
+      desc: "Clock divider",
+      swaccess: "rw",
+      hwaccess: "hro",
+      fields: [
+        { bits: "7:0", name: "clk_div", desc: "Clock divider value", resval: "0" }
+      ]
+    }
+    {
+      name: "mba0",
+      desc: "Memory base address 0 (chip 0)",
+      swaccess: "rw",
+      hwaccess: "hro",
+      fields: [
+        { bits: "31:0", name: "mba0", desc: "Base address for memory chip 0", resval: "0" }
+      ]
+    }
+    {
+      name: "mba1",
+      desc: "Memory base address 1 (chip 1)",
+      swaccess: "rw",
+      hwaccess: "hro",
+      fields: [
+        { bits: "31:0", name: "mba1", desc: "Base address for memory chip 1", resval: "0" }
+      ]
+    }
+    {
+      name: "device",
+      desc: "Device type configuration",
+      swaccess: "rw",
+      hwaccess: "hro",
+      fields: [
+        { bits: "0", name: "device",   desc: "Device select", resval: "0" }
+        { bits: "1", name: "dt0",      desc: "Device timing param 0", resval: "0" }
+        { bits: "2", name: "dt1",      desc: "Device timing param 1", resval: "0" }
+        { bits: "3", name: "sdio_en",  desc: "SDIO/eMMC mode enable", resval: "0" }
+      ]
+    }
+    {
+      name: "ram_opt",
+      desc: "RAM optimization options",
+      swaccess: "rw",
+      hwaccess: "hro",
+      fields: [
+        { bits: "0",   name: "cross_boundary_en", desc: "Cross boundary access enable", resval: "0" }
+        { bits: "2:1", name: "opt_read_enable",    desc: "Optimized read enable", resval: "0" }
+      ]
+    }
+    {
+      name: "irq_en",
+      desc: "Interrupt enable",
+      swaccess: "rw",
+      hwaccess: "hro",
+      fields: [
+        { bits: "0", name: "irq_en", desc: "Enable interrupt on done/error", resval: "0" }
+      ]
+    }
+    {
+      name: "burst_cfg",
+      desc: "Burst / chip-select optimization (1D only, no 2D support)",
+      swaccess: "rw",
+      hwaccess: "hro",
+      fields: [
+        { bits: "1:0", name: "cs_auto_burst_enable",    desc: "CS auto burst enable", resval: "0" }
+        { bits: "3:2", name: "cs_maximum_check_enable", desc: "CS maximum check enable", resval: "0" }
+      ]
+    }
+
+    // --- Descrittore di comando (per-transaction) ---
+    {
+      name: "protocol",
+      desc: "Protocol type (hyper, SD, eMMC)",
+      swaccess: "rw",
+      hwaccess: "hro",
+      fields: [
+        { bits: "1:0", name: "protocol", desc: "Protocol type", resval: "0" }
+      ]
+    }
+    {
+      name: "transaction_type",
+      desc: "Transaction type (data, reg r/w, SD command)",
+      swaccess: "rw",
+      hwaccess: "hro",
+      fields: [
+        { bits: "2:0", name: "transaction_type", desc: "Transaction type", resval: "0" }
+      ]
+    }
+    {
+      name: "response_type",
+      desc: "Expected response type (for SD/eMMC commands)",
+      swaccess: "rw",
+      hwaccess: "hro",
+      fields: [
+        { bits: "3:0", name: "response_type", desc: "Response type", resval: "0" }
+      ]
+    }
+    {
+      name: "data_size",
+      desc: "Transfer size",
+      swaccess: "rw",
+      hwaccess: "hro",
+      fields: [
+        { bits: "9:0", name: "data_size", desc: "Transfer size in bytes", resval: "0" }
+      ]
+    }
+    {
+      name: "external_address",
+      desc: "External address",
+      swaccess: "rw",
+      hwaccess: "hro",
+      fields: [
+        { bits: "31:0", name: "external_address", desc: "External address", resval: "0" }
+      ]
+    }
+    {
+      name: "internal_address",
+      desc: "Internal address",
+      swaccess: "rw",
+      hwaccess: "hro",
+      fields: [
+        { bits: "31:0", name: "internal_address", desc: "Internal address", resval: "0" }
+      ]
+    }
+    {
+      name: "trans_auto",
+      desc: "Automatic mode enable",
+      swaccess: "rw",
+      hwaccess: "hro",
+      fields: [
+        { bits: "0", name: "auto", desc: "Auto mode enable", resval: "0" }
+      ]
+    }
+    {
+      name: "wdata",
+      desc: "Scalar write data for reg r/w transactions",
+      swaccess: "rw",
+      hwaccess: "hro",
+      fields: [
+        { bits: "31:0", name: "wdata", desc: "Value to write to remote register", resval: "0" }
+      ]
+    }
+    {
+      name: "rdata",
+      desc: "Scalar read data for reg r/w transactions",
+      swaccess: "ro",
+      hwaccess: "hwo",
+      hwext: "true",
+      fields: [
+        { bits: "31:0", name: "rdata", desc: "Value read from remote register" }
+      ]
+    }
+    {
+      name: "transaction_valid",
+      desc: "Launch transaction",
+      swaccess: "rw",
+      hwaccess: "hro",
+      hwqe: "true",
+      fields: [
+        { bits: "0", name: "transaction_valid", desc: "Transaction valid", resval: "0" }
+      ]
+    }
+    {
+      name: "status",
+      desc: "Controller status",
+      swaccess: "ro",
+      hwaccess: "hwo",
+      hwext: "true",
+      fields: [
+        { bits: "0", name: "busy",  desc: "Controller busy" }
+        { bits: "1", name: "done",  desc: "Transaction completed" }
+        { bits: "2", name: "error", desc: "Transaction error" }
+      ]
+    }
+  ]
+}
