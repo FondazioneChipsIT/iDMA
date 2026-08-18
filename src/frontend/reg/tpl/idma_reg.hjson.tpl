@@ -116,26 +116,26 @@ ${params}
       }
     },
     {
-      name: "user",
-      desc: "32 bits user field for multicast configuration",
+      name: "user_high",
+      desc: "32 bits user field for custom addition",
       swaccess: "rw",
       hwaccess: "hro",
       fields: [
         { bits: "31:0",
           name: "user",
-          desc: "User field for multicast configuration"
+          desc: "32 bits user field for custom addition"
         }
       ]
     },  
     {
-      name: "collective_op",
-      desc: "4 bits for collective operation selection",
+      name: "user_low",
+      desc: "32 bits user field for custom addition",
       swaccess: "rw",
       hwaccess: "hro",
       fields: [
-        { bits: "3:0",
+        { bits: "31:0",
           name: "user",
-          desc: "Collective Operation field"
+          desc: "32 bits user field for custom addition"
         }
       ]
     },  
