@@ -25,7 +25,9 @@ module idma_${identifier} #(
   /// Dependent type for IdCounterWidth
   parameter type         cnt_width_t    = logic [IdCounterWidth-1:0],
   /// Dependent type for StreamWidth
-  parameter type         stream_t       = logic [StreamWidth-1:0]
+  parameter type         stream_t       = logic [StreamWidth-1:0],
+  /// Width of the User field
+  parameter int unsigned UserWidth      = 32'd32
 ) (
   input  logic clk_i,
   input  logic rst_ni,
@@ -120,6 +122,13 @@ module idma_${identifier} #(
       arb_dma_req[i]${sep}src_addr = {dma_reg2hw[i].src_addr_high.q, dma_reg2hw[i].src_addr_low.q};
       arb_dma_req[i]${sep}dst_addr = {dma_reg2hw[i].dst_addr_high.q, dma_reg2hw[i].dst_addr_low.q};
 % endif
+
+      // user field
+      if(UserWidth > 32) begin
+        arb_dma_req[i]${sep}user = {dma_reg2hw[i].user_high.q, dma_reg2hw[i].user_low.q[UserWidth-1-32:0]};
+      end else begin
+        arb_dma_req[i]${sep}user = dma_reg2hw[i].user_low.q;
+      end
 
       // Protocols
       arb_dma_req[i]${sep}opt.src_protocol = idma_pkg::protocol_e'(dma_reg2hw[i].conf.src_protocol);

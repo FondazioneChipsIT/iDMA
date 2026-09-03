@@ -115,6 +115,30 @@ ${params}
         ]
       }
     },
+    {
+      name: "user_high",
+      desc: "32 bits user field for custom addition",
+      swaccess: "rw",
+      hwaccess: "hro",
+      fields: [
+        { bits: "31:0",
+          name: "user",
+          desc: "32 bits user field for custom addition"
+        }
+      ]
+    },  
+    {
+      name: "user_low",
+      desc: "32 bits user field for custom addition",
+      swaccess: "rw",
+      hwaccess: "hro",
+      fields: [
+        { bits: "31:0",
+          name: "user",
+          desc: "32 bits user field for custom addition"
+        }
+      ]
+    },  
 ${registers}
   ]
 }
