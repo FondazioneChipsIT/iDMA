@@ -6,27 +6,21 @@
 # - Thomas Benz <tbenz@iis.ee.ethz.ch>
 
 stages:
-  - init
-  - idma
+  - nonfree
 
 init:
-  stage: init
-  script:
-    - make idma_nonfree_init
-    - make idma_nonfree_ci
+  stage: nonfree
+  script: make idma_nonfree_init
   artifacts:
-      paths:
-        - nonfree/ci/ci.yml
+    paths: [ nonfree/.gitlab-ci.yml ]
 
-idma:
-  stage: idma
+subpipe:
+  stage: nonfree
   needs: [ init ]
-  rules:
-    - if: $CI_COMMIT_BRANCH =~ /^__deploy__/
-      when: never
-    - when: always
+  variables:
+    PARENT_PIPELINE_SOURCE: $CI_PIPELINE_SOURCE
   trigger:
     include:
-      - artifact: nonfree/ci/ci.yml
+      - artifact: nonfree/.gitlab-ci.yml
         job: init
     strategy: depend
