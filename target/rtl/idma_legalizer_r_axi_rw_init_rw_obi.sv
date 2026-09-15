@@ -410,8 +410,6 @@ module idma_legalizer_r_axi_rw_init_rw_obi #(
 
     // assign the signals needed to set-up the write data path
     always_comb begin : gen_write_data_path
-        case (opt_tf_q.dst_protocol)
-        default:
             w_req_o.w_dp_req = '{
                 dst_protocol: opt_tf_q.dst_protocol,
                 offset:       w_addr_offset,
@@ -420,7 +418,6 @@ module idma_legalizer_r_axi_rw_init_rw_obi #(
                 num_beats:    'd0,
                 is_single:    1'b1
             };
-        endcase
     end
 
 
