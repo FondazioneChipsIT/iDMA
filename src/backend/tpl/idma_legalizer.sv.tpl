@@ -573,6 +573,7 @@ ${database[protocol]['legalizer_write_meta_channel']}
 
     // assign the signals needed to set-up the write data path
     always_comb begin : gen_write_data_path
+        % if any('legalizer_write_data_path' in database[protocol] for protocol in used_write_protocols):
         case (opt_tf_q.dst_protocol)
         % for protocol in used_write_protocols:
             % if 'legalizer_write_data_path' in database[protocol]:
@@ -581,6 +582,7 @@ ${database[protocol]['legalizer_write_data_path']}
             % endif
         % endfor
         default:
+        % endif
             w_req_o.w_dp_req = '{
                 dst_protocol: opt_tf_q.dst_protocol,
                 offset:       w_addr_offset,
@@ -589,7 +591,9 @@ ${database[protocol]['legalizer_write_data_path']}
                 num_beats:    'd0,
                 is_single:    1'b1
             };
+        % if any('legalizer_write_data_path' in database[protocol] for protocol in used_write_protocols):
         endcase
+        % endif
     end
 
 % endif
