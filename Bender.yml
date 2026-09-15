@@ -54,9 +54,21 @@ sources:
       - src/backend/idma_tilelink_write.sv
 
   # Generated content
+  # The generator emitted individual files here, not the single idma_generated.sv
+  # that upstream declares; order taken from the legacy analyze scripts.
   - target: rtl
     files:
-      - target/rtl/idma_generated.sv
+      - target/rtl/idma_reg32_3d_reg_pkg.sv
+      - target/rtl/idma_transport_layer_r_axi_rw_init_rw_obi.sv
+      - target/rtl/idma_transport_layer_r_obi_rw_init_w_axi.sv
+      - target/rtl/idma_legalizer_r_axi_rw_init_rw_obi.sv
+      - target/rtl/idma_legalizer_r_obi_rw_init_w_axi.sv
+      - target/rtl/idma_backend_r_axi_rw_init_rw_obi.sv
+      - target/rtl/idma_backend_r_obi_rw_init_w_axi.sv
+      - target/rtl/idma_backend_synth_r_axi_rw_init_rw_obi.sv
+      - target/rtl/idma_backend_synth_r_obi_rw_init_w_axi.sv
+      - target/rtl/idma_reg32_3d_reg_top.sv
+      - target/rtl/idma_reg32_3d_top.sv
 
   # Midends
   - target: rtl
