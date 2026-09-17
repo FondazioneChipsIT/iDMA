@@ -1,0 +1,38 @@
+# Docs for iDMA
+
+site_name: iDMA
+theme:
+  name: material
+  icon:
+    repo: fontawesome/brands/github
+  features:
+    - navigation.expand
+    - navigation.tracking
+    - navigation.sections
+    - navigation.indexes
+    - navigation.footer
+
+markdown_extensions:
+  - markdown_grid_tables:
+  - toc:
+      toc_depth: 3
+
+repo_url: https://github.com/FondazioneChipsIT/iDMA.git
+repo_name: FondazioneChipsIT/iDMA
+
+nav:
+- Home:
+  - index.md
+  - Getting Started: gs.md
+  - Publications: publications.md
+- Architecture:
+  - archi/index.md
+  - Cluster Integration: archi/cluster_integration.md
+  - Security Island Integration: archi/opentitan_integration.md
+  - iDMA Top Architecture: archi/arch.md
+  - iDMA Frontend: archi/frontend.md
+  - iDMA Midend: archi/midend.md
+  - iDMA Backend: archi/backend.md
+- User Manual:
+  - um/index.md
+  - Simulation: um/sim.md
