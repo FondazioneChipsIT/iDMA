@@ -6,7 +6,6 @@
 // - Thomas Benz <tbenz@iis.ee.ethz.ch>
 // - Tobias Senti <tsenti@ethz.ch>
 
-`include "axi/typedef.svh"
 `include "idma/guard.svh"
 
 /// The iDMA backend implements an arbitrary 1D copy engine

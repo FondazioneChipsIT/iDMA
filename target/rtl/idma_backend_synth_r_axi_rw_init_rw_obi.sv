@@ -6,8 +6,6 @@
 // - Thomas Benz <tbenz@iis.ee.ethz.ch>
 // - Tobias Senti <tsenti@ethz.ch>
 
-`include "axi/typedef.svh"
-`include "axi_stream/typedef.svh"
 `include "idma/typedef.svh"
 `include "obi/typedef.svh"
 `include "tilelink/typedef.svh"
@@ -67,6 +65,70 @@ module idma_backend_synth_r_axi_rw_init_rw_obi #(
     parameter type tf_len_t                    = logic[TFLenWidth-1:0],
     /// Offset type (do not override!)
     parameter type offset_t                    = logic[OffsetWidth-1:0],
+    parameter type axi_aw_chan_t = struct packed {
+        logic [AxiIdWidth-1:0] id;
+        logic [AddrWidth-1:0] addr;
+        logic [7:0] len;
+        logic [2:0] size;
+        logic [1:0] burst;
+        logic lock;
+        logic [3:0] cache;
+        logic [2:0] prot;
+        logic [3:0] qos;
+        logic [3:0] region;
+        logic [5:0] atop;
+        logic [UserWidth-1:0] user;
+    },
+    parameter type axi_w_chan_t = struct packed {
+        logic [DataWidth-1:0] data;
+        logic [DataWidth/8-1:0] strb;
+        logic last;
+        logic [UserWidth-1:0] user;
+    },
+    parameter type axi_ar_chan_t = struct packed {
+        logic [AxiIdWidth-1:0] id;
+        logic [AddrWidth-1:0] addr;
+        logic [7:0] len;
+        logic [2:0] size;
+        logic [1:0] burst;
+        logic lock;
+        logic [3:0] cache;
+        logic [2:0] prot;
+        logic [3:0] qos;
+        logic [3:0] region;
+        logic [UserWidth-1:0] user;
+    },
+    parameter type axi_b_chan_t = struct packed {
+        logic [AxiIdWidth-1:0] id;
+        logic [1:0] resp;
+        logic [UserWidth-1:0] user;
+    },
+    parameter type axi_r_chan_t = struct packed {
+        logic [AxiIdWidth-1:0] id;
+        logic [DataWidth-1:0] data;
+        logic [1:0] resp;
+        logic last;
+        logic [UserWidth-1:0] user;
+    },
+    parameter type axi_req_t = struct packed {
+        axi_aw_chan_t aw;
+        logic aw_valid;
+        axi_w_chan_t w;
+        logic w_valid;
+        logic b_ready;
+        axi_ar_chan_t ar;
+        logic ar_valid;
+        logic r_ready;
+    },
+    parameter type axi_rsp_t = struct packed {
+        logic aw_ready;
+        logic ar_ready;
+        logic w_ready;
+        logic b_valid;
+        axi_b_chan_t b;
+        logic r_valid;
+        axi_r_chan_t r;
+    },
     /// Burst Len (for actual burst length do 8 byte * 2^(Burst_len))
     parameter int unsigned Burst_len = 4'd5
 )(
@@ -191,18 +253,6 @@ module idma_backend_synth_r_axi_rw_init_rw_obi #(
     /// Define the error handling capability
     localparam idma_pkg::error_cap_e ErrorCap = ErrorHandling ? idma_pkg::ERROR_HANDLING :
                                                                 idma_pkg::NO_ERROR_HANDLING;
-
-    // AXI4+ATOP typedefs
-`AXI_TYPEDEF_AW_CHAN_T(axi_aw_chan_t, addr_t, id_t, user_t)
-`AXI_TYPEDEF_W_CHAN_T(axi_w_chan_t, data_t, strb_t, user_t)
-`AXI_TYPEDEF_B_CHAN_T(axi_b_chan_t, id_t, user_t)
-
-`AXI_TYPEDEF_AR_CHAN_T(axi_ar_chan_t, addr_t, id_t, user_t)
-`AXI_TYPEDEF_R_CHAN_T(axi_r_chan_t, data_t, id_t, user_t)
-
-`AXI_TYPEDEF_REQ_T(axi_req_t, axi_aw_chan_t, axi_w_chan_t, axi_ar_chan_t)
-`AXI_TYPEDEF_RESP_T(axi_rsp_t, axi_b_chan_t, axi_r_chan_t)
-
 
     // Memory Init typedefs
 /// init read request
