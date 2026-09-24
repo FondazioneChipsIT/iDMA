@@ -849,7 +849,7 @@ w_req.decouple_aw || (w_req.w_dp_req.dst_protocol inside {\
         // Atleast one write protocol uses combined aw and w -> Need to buffer read meta requests
         // As a write could depend on up to two reads
         stream_fifo_optimal_wrap #(
-            .Depth        ( 2                    ),
+            .Depth        ( MetaFifoDepth ),
             .type_t       (\
     % if one_write_port:
  write_meta_channel_t ),
