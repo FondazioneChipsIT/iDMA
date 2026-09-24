@@ -18,6 +18,7 @@ module idma_backend_r_axi_rw_init_rw_obi #(
     parameter int unsigned UserWidth        = 32'd1,
     /// AXI ID width
     parameter int unsigned AxiIdWidth       = 32'd1,
+    parameter int unsigned aw_fifo_depth    = 32'd8,
     /// Number of transaction that can be in-flight concurrently
     parameter int unsigned NumAxInFlight    = 32'd2,
     /// The depth of the internal reorder buffer:
@@ -656,7 +657,7 @@ module idma_backend_r_axi_rw_init_rw_obi #(
         // Atleast one write protocol uses combined aw and w -> Need to buffer read meta requests
         // As a write could depend on up to two reads
         stream_fifo_optimal_wrap #(
-            .Depth        ( 2                    ),
+            .Depth        ( aw_fifo_depth               ),
             .type_t       ( write_meta_channel_tagged_t ),
             .PrintInfo    ( PrintFifoInfo        )
         ) i_aw_fifo (
