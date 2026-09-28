@@ -21,15 +21,7 @@ passive_req: "false"
 read_meta_channel_width: "localparam int unsigned axi_ar_chan_width = axi_pkg::ar_width(AddrWidth, AxiIdWidth, UserWidth);"
 write_meta_channel_width: "localparam int unsigned axi_aw_chan_width = axi_pkg::aw_width(AddrWidth, AxiIdWidth, UserWidth);"
 typedefs: |
-    `AXI_TYPEDEF_AW_CHAN_T(axi_aw_chan_t, addr_t, id_t, user_t)
-    `AXI_TYPEDEF_W_CHAN_T(axi_w_chan_t, data_t, strb_t, user_t)
-    `AXI_TYPEDEF_B_CHAN_T(axi_b_chan_t, id_t, user_t)
-
-    `AXI_TYPEDEF_AR_CHAN_T(axi_ar_chan_t, addr_t, id_t, user_t)
-    `AXI_TYPEDEF_R_CHAN_T(axi_r_chan_t, data_t, id_t, user_t)
-
-    `AXI_TYPEDEF_REQ_T(axi_req_t, axi_aw_chan_t, axi_w_chan_t, axi_ar_chan_t)
-    `AXI_TYPEDEF_RESP_T(axi_rsp_t, axi_b_chan_t, axi_r_chan_t)
+    // No AXI typedefs are supported
 legalizer_read_meta_channel: |
     r_req_o.ar_req.axi.ar_chan = '{
         id: opt_tf_q.axi_id,
