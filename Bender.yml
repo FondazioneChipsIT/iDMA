@@ -14,12 +14,10 @@ package:
     - "Axel Vanoni <axvanoni@ethz.ch>"
 
 dependencies:
-  axi:                 { git: "https://github.com/pulp-platform/axi.git",                 version: 0.39.1 }
-  axi_stream:          { git: "https://github.com/pulp-platform/axi_stream.git",          version: 0.1.1  }
-  common_cells:        { git: "https://github.com/pulp-platform/common_cells.git",        version: 1.33.0 }
-  common_verification: { git: "https://github.com/pulp-platform/common_verification.git", version: 0.2.3  }
-  register_interface:  { git: "https://github.com/pulp-platform/register_interface.git",  version: 0.4.3  }
-  obi:                 { git: "https://github.com/pulp-platform/obi.git",                 version: 0.1.2  }
+  common_cells:        { path: "../common_cells" }
+  axi_node:            { path: "../axi/axi_node" }
+  register_interface:  { git: "https://github.com/FondazioneChipsIT/register_interface.git",  rev: 8133f17729bac746215fdee5a6676ce30322124e  }
+  obi:                 { git: "https://github.com/FondazioneChipsIT/obi.git",                 rev: ddea5c2e18d5f70802c67bc013574a0d0e7888ed  }
 
 export_include_dirs:
   - src/include
@@ -82,33 +80,3 @@ sources:
     files:
       # Level 0
       - src/frontend/idma_transfer_id_gen.sv
-
-  # Synthesis wrappers
-  - target: idma_synth
-    files:
-      # Level 0
-      - src/frontend/desc64/idma_desc64_synth_pkg.sv
-      - src/midend/idma_mp_midend_synth_pkg.sv
-      - src/midend/idma_nd_midend_synth.sv
-      - src/midend/idma_rt_midend_synth_pkg.sv
-      # Level 1
-      - src/frontend/desc64/idma_desc64_synth.sv
-      - src/midend/idma_mp_midend_synth.sv
-      - src/midend/idma_rt_midend_synth.sv
-
-  # Testbenches
-  - target: idma_test
-    files:
-      # Level 0
-      - test/idma_intf.sv
-      - test/idma_test.sv
-      # Level 1
-      - test/frontend/tb_idma_desc64_top.sv
-      - test/frontend/tb_idma_desc64_bench.sv
-      - test/future/idma_tb_per2axi.sv
-      - test/future/TLToAXI4.v
-      - test/midend/tb_idma_nd_midend.sv
-      - test/midend/tb_idma_rt_midend.sv
-      # Level 2
-      - test/future/idma_obi2axi_bridge.sv
-      - test/future/idma_tilelink2axi_bridge.sv

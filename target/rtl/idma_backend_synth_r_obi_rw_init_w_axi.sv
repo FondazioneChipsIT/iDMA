@@ -20,6 +20,7 @@ module idma_backend_synth_r_obi_rw_init_w_axi #(
     parameter int unsigned UserWidth           = 32'd1,
     /// AXI ID width
     parameter int unsigned AxiIdWidth          = 32'd1,
+    parameter int unsigned aw_fifo_depth       = 32'd8,
     /// Number of transaction that can be in-flight concurrently
     parameter int unsigned NumAxInFlight       = 32'd3,
     /// The depth of the internal reorder buffer:
@@ -246,6 +247,10 @@ module idma_backend_synth_r_obi_rw_init_w_axi #(
     localparam idma_pkg::error_cap_e ErrorCap = ErrorHandling ? idma_pkg::ERROR_HANDLING :
                                                                 idma_pkg::NO_ERROR_HANDLING;
 
+    // AXI4+ATOP typedefs
+// No AXI typedefs are supported
+
+
     // Memory Init typedefs
 /// init read request
 typedef struct packed {
@@ -374,6 +379,7 @@ typedef struct packed {
         .TFLenWidth           ( TFLenWidth              ),
         .MaskInvalidData      ( MaskInvalidData         ),
         .BufferDepth          ( BufferDepth             ),
+        .aw_fifo_depth        ( aw_fifo_depth           ),
         .NumAxInFlight        ( NumAxInFlight           ),
         .MemSysDepth          ( MemSysDepth             ),
         .RAWCouplingAvail     ( RAWCouplingAvail        ),

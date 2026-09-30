@@ -18,6 +18,7 @@ module idma_backend_r_obi_rw_init_w_axi #(
     parameter int unsigned UserWidth        = 32'd1,
     /// AXI ID width
     parameter int unsigned AxiIdWidth       = 32'd1,
+    parameter int unsigned aw_fifo_depth    = 32'd8,
     /// Number of transaction that can be in-flight concurrently
     parameter int unsigned NumAxInFlight    = 32'd2,
     /// The depth of the internal reorder buffer:

@@ -6,7 +6,6 @@
 // - Thomas Benz <tbenz@iis.ee.ethz.ch>
 // - Tobias Senti <tsenti@ethz.ch>
 
-`include "axi/typedef.svh"
 `include "idma/guard.svh"
 
 /// The iDMA backend implements an arbitrary 1D copy engine
@@ -19,6 +18,7 @@ module idma_backend_${name_uniqueifier} #(
     parameter int unsigned UserWidth        = 32'd1,
     /// AXI ID width
     parameter int unsigned AxiIdWidth       = 32'd1,
+    parameter int unsigned aw_fifo_depth    = 32'd8,
     /// Number of transaction that can be in-flight concurrently
     parameter int unsigned NumAxInFlight    = 32'd2,
     /// The depth of the internal reorder buffer:
@@ -849,7 +849,7 @@ w_req.decouple_aw || (w_req.w_dp_req.dst_protocol inside {\
         // Atleast one write protocol uses combined aw and w -> Need to buffer read meta requests
         // As a write could depend on up to two reads
         stream_fifo_optimal_wrap #(
-            .Depth        ( 2                    ),
+            .Depth        ( aw_fifo_depth               ),
             .type_t       (\
     % if one_write_port:
  write_meta_channel_t ),

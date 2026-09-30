@@ -255,6 +255,10 @@ module idma_backend_synth_r_axi_rw_init_rw_obi #(
     localparam idma_pkg::error_cap_e ErrorCap = ErrorHandling ? idma_pkg::ERROR_HANDLING :
                                                                 idma_pkg::NO_ERROR_HANDLING;
 
+    // AXI4+ATOP typedefs
+// No AXI typedefs are supported
+
+
     // Memory Init typedefs
 /// init read request
 typedef struct packed {
