@@ -16,8 +16,8 @@ package:
 dependencies:
   common_cells:        { path: "../common_cells" }
   axi_node:            { path: "../axi/axi_node" }
-  register_interface:  { git: "https://github.com/FondazioneChipsIT/register_interface.git",  rev: d2923e61038d494221c839655192cea7cb791b04  }
-  obi:                 { git: "https://github.com/FondazioneChipsIT/obi.git",                 rev: ee35c37d599860fe62b1fcfccd4106d5233ab910  }
+  register_interface:  { git: "https://github.com/FondazioneChipsIT/register_interface.git",  rev: 8133f17729bac746215fdee5a6676ce30322124e  }
+  obi:                 { git: "https://github.com/FondazioneChipsIT/obi.git",                 rev: ddea5c2e18d5f70802c67bc013574a0d0e7888ed  }
 
 export_include_dirs:
   - src/include
