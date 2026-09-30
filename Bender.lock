@@ -4,24 +4,32 @@ packages:
     version: null
     source:
       Path: ../axi/axi_node
-    dependencies: []
+    dependencies:
+    - common_cells
   common_cells:
     revision: null
     version: null
     source:
       Path: ../common_cells
-    dependencies: []
+    dependencies:
+    - tech_cells_generic
   obi:
-    revision: ee35c37d599860fe62b1fcfccd4106d5233ab910
+    revision: null
     version: null
     source:
-      Git: https://github.com/FondazioneChipsIT/obi.git
+      Path: ../obi
     dependencies:
     - common_cells
   register_interface:
-    revision: d2923e61038d494221c839655192cea7cb791b04
+    revision: null
     version: null
     source:
-      Git: https://github.com/FondazioneChipsIT/register_interface.git
+      Path: ../register_interface
     dependencies:
     - common_cells
+  tech_cells_generic:
+    revision: null
+    version: null
+    source:
+      Path: ../tech_cells_generic
+    dependencies: []
