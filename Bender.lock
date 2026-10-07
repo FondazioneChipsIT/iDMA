@@ -1,35 +1,29 @@
 packages:
   axi_node:
-    revision: null
+    revision: integration_EL1
     version: null
     source:
-      Path: ../axi/axi_node
+      Git: git@github.com:DevOps-SmartEyewear-Research/axi_node.git
     dependencies:
     - common_cells
   common_cells:
-    revision: null
+    revision: integration_EL1
     version: null
     source:
-      Path: ../common_cells
+      Git: git@github.com:DevOps-SmartEyewear-Research/common_cells.git
     dependencies:
     - tech_cells_generic
   obi:
-    revision: null
+    revision: rg/add_src_files
     version: null
     source:
-      Path: ../obi
+      Git: https://github.com/FondazioneChipsIT/obi.git
     dependencies:
     - common_cells
   register_interface:
-    revision: null
+    revision: rg/add_src_files
     version: null
     source:
-      Path: ../register_interface
+      Git: https://github.com/FondazioneChipsIT/register_interface.git
     dependencies:
     - common_cells
-  tech_cells_generic:
-    revision: null
-    version: null
-    source:
-      Path: ../tech_cells_generic
-    dependencies: []

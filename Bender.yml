@@ -14,10 +14,10 @@ package:
     - "Axel Vanoni <axvanoni@ethz.ch>"
 
 dependencies:
-  common_cells:        { path: "../common_cells" }
-  axi_node:            { path: "../axi/axi_node" }
-  register_interface:  { git: "https://github.com/FondazioneChipsIT/register_interface.git",  rev: 8133f17729bac746215fdee5a6676ce30322124e  }
-  obi:                 { git: "https://github.com/FondazioneChipsIT/obi.git",                 rev: ddea5c2e18d5f70802c67bc013574a0d0e7888ed  }
+  common_cells:        { git: "git@github.com:DevOps-SmartEyewear-Research/common_cells.git", rev: integration_EL1  }
+  axi_node:            { git: "git@github.com:DevOps-SmartEyewear-Research/axi_node.git",     rev: integration_EL1  }
+  register_interface:  { git: "https://github.com/FondazioneChipsIT/register_interface.git",  rev: rg/add_src_files }
+  obi:                 { git: "https://github.com/FondazioneChipsIT/obi.git",                 rev: rg/add_src_files }
 
 export_include_dirs:
   - src/include
