@@ -259,8 +259,6 @@ module idma_${identifier} #(
       nxt_dma_req[i]${sep}length   = dma_reg2hw[i].length[0].length.value;
       nxt_dma_req[i]${sep}src_addr = dma_reg2hw[i].src_addr[0].src_addr.value;
       nxt_dma_req[i]${sep}dst_addr = dma_reg2hw[i].dst_addr[0].dst_addr.value;
-      nxt_dma_req[i]${sep}user[35:4] = dma_reg2hw[i].user.value;
-      nxt_dma_req[i]${sep}user[3:0] = dma_reg2hw[i].collective_op.value;
 % else:
       nxt_dma_req${sep}length   = {dma_reg2hw[i].length[1].length.value,     dma_reg2hw[i].length[0].length.value};
       nxt_dma_req${sep}src_addr = {dma_reg2hw[i].src_addr[1].src_addr.value, dma_reg2hw[i].src_addr[0].src_addr.value};
@@ -271,9 +269,9 @@ module idma_${identifier} #(
 
       // user field
       if(UserWidth > 32) begin
-        arb_dma_req[i]${sep}user = {dma_reg2hw[i].user_high.q, dma_reg2hw[i].user_low.q[UserWidth-1-32:0]};
+        nxt_dma_req[i]${sep}user = {dma_reg2hw[i].user_high.user_high.value, dma_reg2hw[i].user_low.user_low.value[UserWidth-1-32:0]};
       end else begin
-        arb_dma_req[i]${sep}user = dma_reg2hw[i].user_low.q;
+        nxt_dma_req[i]${sep}user = dma_reg2hw[i].user_low.user_low.value;
       end
 
       // Protocols

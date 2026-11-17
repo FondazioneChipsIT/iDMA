@@ -253,11 +253,7 @@ ${database[p]['max_beats_per_burst']} * StrbWidth > ${database[p]['page_size']}\
     //--------------------------------------
 % if no_read_bursting or has_page_read_bursting:
     idma_legalizer_page_splitter #(
-<<<<<<< HEAD
         .BurstLen      ( BurstLen      ),
-=======
-        .Burst_len     ( Burst_len     ),
->>>>>>> d6249da (Remove unused registers + X cleanup + Burst Length parametrized)
         .OffsetWidth   ( OffsetWidth   ),
         .PageAddrWidth ( PageAddrWidth ),
         .addr_t        ( addr_t        ),
@@ -336,11 +332,7 @@ r_num_bytes_to_pb = r_page_num_bytes_to_pb;
     //--------------------------------------
 % if no_write_bursting or has_page_write_bursting:
     idma_legalizer_page_splitter #(
-<<<<<<< HEAD
         .BurstLen      ( BurstLen      ),
-=======
-        .Burst_len     ( Burst_len     ),
->>>>>>> d6249da (Remove unused registers + X cleanup + Burst Length parametrized)
         .OffsetWidth   ( OffsetWidth   ),
         .PageAddrWidth ( PageAddrWidth ),
         .addr_t        ( addr_t        ),
@@ -729,7 +721,6 @@ w_num_bytes_to_pb = w_page_num_bytes_to_pb;
         //--------------------------------------
         // new request is taken in if both r and w machines are ready.
         if (ready_o & valid_i) begin
-<<<<<<< HEAD
             r_tf_d   = ld_in.r_tf;
             opt_tf_d = ld_in.opt;
 % if compute_eligible:
@@ -738,52 +729,6 @@ w_num_bytes_to_pb = w_page_num_bytes_to_pb;
                 w_tf_d  = ld_in.w_tf;
                 mx_w_d  = ld_in.mx_w;
                 opt_w_d = ld_in.opt;
-=======
-
-            // load all three mutable objects (source, destination, option)
-            // source or read
-            r_tf_d = '{
-                length: req_i.length,
-                addr:   req_i.src_addr,
-                valid:   1'b1,
-                base_addr: req_i.src_addr,
-                default: '0
-            };
-            // destination or write
-            w_tf_d = '{
-                length: req_i.length,
-                addr:   req_i.dst_addr,
-                valid:   1'b1,
-                base_addr: req_i.dst_addr,
-                user: req_i.user,
-                default: '0
-            };
-            // options
-            opt_tf_d = '{
-                src_protocol:   req_i.opt.src_protocol,
-                dst_protocol:   req_i.opt.dst_protocol,
-                read_shift:     '0,
-                write_shift:    '0,
-                decouple_rw:    req_i.opt.beo.decouple_rw,
-                decouple_aw:    req_i.opt.beo.decouple_aw,
-                src_max_llen:   req_i.opt.beo.src_max_llen,
-                dst_max_llen:   req_i.opt.beo.dst_max_llen,
-                src_reduce_len: req_i.opt.beo.src_reduce_len,
-                dst_reduce_len: req_i.opt.beo.dst_reduce_len,
-                axi_id:         req_i.opt.axi_id,
-                src_axi_opt:    req_i.opt.src,
-                dst_axi_opt:    req_i.opt.dst,
-                super_last:     req_i.opt.last
-            };
-            // determine shift amount
-            if (CombinedShifter) begin
-                opt_tf_d.read_shift  = req_i.src_addr[OffsetWidth-1:0] -
-                                       req_i.dst_addr[OffsetWidth-1:0];
-                opt_tf_d.write_shift = '0;
-            end else begin
-                opt_tf_d.read_shift  =   req_i.src_addr[OffsetWidth-1:0];
-                opt_tf_d.write_shift = - req_i.dst_addr[OffsetWidth-1:0];
->>>>>>> d6249da (Remove unused registers + X cleanup + Burst Length parametrized)
             end
         end
         // W takes the next queued request

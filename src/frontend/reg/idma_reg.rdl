@@ -91,6 +91,28 @@ addrmap idma_reg #(
         } done_id [31:0] = 0;
     };
 
+    reg user_high {
+        regwidth = 32;
+        name = "user_high";
+        desc = "32 bits user field for custom addition";
+        default sw = rw;
+        default hw = r;
+        field {
+            desc = "32 bits user field for custom addition";
+        } user_high [31:0] = 0;
+    };
+
+    reg user_low {
+        regwidth = 32;
+        name = "user_low";
+        desc = "32 bits user field for custom addition";
+        default sw = rw;
+        default hw = r;
+        field {
+            desc = "32 bits user field for custom addition";
+        } user_low [31:0] = 0;
+    };
+
     reg dst_addr {
         name = "dst_addr";
         desc = "Destination address";
@@ -258,6 +280,8 @@ addrmap idma_reg #(
              mx_cfg   mx_cfg;
              scale_addr scale_addr[SysAddrWidth/32];
              mx_dim   mx_dim[NumDims-1 | NumDims == 1];
+             user_high user_high;
+             user_low user_low;
 };
 
 `endif // IDMA_REG_RDL
