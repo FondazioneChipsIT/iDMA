@@ -83,7 +83,7 @@ module idma_${identifier} #(
   output dma_req_t   dma_req_o,
   output logic       req_valid_o,
   input  logic       req_ready_i,
-  input  cnt_width_t next_id_i,
+  input  cnt_width_t [NumStreams-1:0] next_id_i,
   output stream_t    stream_idx_o,
   /// Status signals
   input  cnt_width_t           [NumStreams-1:0] done_id_i,
@@ -361,7 +361,7 @@ module idma_${identifier} #(
     // observational registers: drive .next (read-side launch is the rd_swacc strobe above)
     for (genvar c = 0; c < NumStreams; c++) begin : gen_hw2reg_connections
         assign dma_hw2reg[i].status[c].busy.next     = {midend_busy_i[c], busy_i[c]};
-        assign dma_hw2reg[i].next_id[c].next_id.next = launch_ok ? next_id_i : '0;
+        assign dma_hw2reg[i].next_id[c].next_id.next = launch_ok ? next_id_i[c] : '0;
         assign dma_hw2reg[i].done_id[c].done_id.next = done_id_i[c];
     end
 
