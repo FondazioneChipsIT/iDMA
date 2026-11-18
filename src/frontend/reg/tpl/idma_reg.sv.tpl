@@ -269,7 +269,7 @@ module idma_${identifier} #(
 
       // user field
       if(UserWidth > 32) begin
-        nxt_dma_req${sep}user = {dma_reg2hw[i].user_high.user_high.value, dma_reg2hw[i].user_low.user_low.value[UserWidth-1-32:0]};
+        nxt_dma_req${sep}user = {dma_reg2hw[i].user_high.user_high.value, dma_reg2hw[i].user_low.user_low.value[(UserWidth > 32 ? UserWidth-33 : 0):0]};
       end else begin
         nxt_dma_req${sep}user = dma_reg2hw[i].user_low.user_low.value;
       end
