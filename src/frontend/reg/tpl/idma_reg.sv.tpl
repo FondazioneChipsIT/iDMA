@@ -125,7 +125,7 @@ module idma_${identifier} #(
 
       // user field
       if(UserWidth > 32) begin
-        arb_dma_req[i]${sep}user = {dma_reg2hw[i].user_high.q, dma_reg2hw[i].user_low.q[UserWidth-1-32:0]};
+        arb_dma_req[i]${sep}user = {dma_reg2hw[i].user_high.q, dma_reg2hw[i].user_low.q[(UserWidth > 32 ? UserWidth-33 : 0):0]};
       end else begin
         arb_dma_req[i]${sep}user = dma_reg2hw[i].user_low.q;
       end
