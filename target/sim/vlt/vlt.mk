@@ -49,7 +49,12 @@ IDMA_VLT_CONFIGS := $(strip $(foreach testbench,$(IDMA_VLT_TESTBENCHES),\
 # Make cannot inspect the sources named by the Verilator file list. Use
 # Bender's plain file list for source dependencies and conservatively track all
 # Verilog headers in this package and its checked-out dependencies.
-IDMA_VLT_SOURCES := $(shell \
+# Recursively expanded and referenced via secondary expansion in the vlt.bin
+# rule, so Bender only runs when a Verilator build is actually requested. An
+# immediate expansion would run at parse time for every target (including
+# idma_hw_all), before target/rtl/idma_generated.sv exists, and Bender would
+# fail with E31.
+IDMA_VLT_SOURCES = $(shell \
 	$(BENDER) script flist $(IDMA_VLT_BENDER_ARGS))
 IDMA_VLT_HEADERS := $(shell \
 	find $(IDMA_ROOT)/src $(IDMA_ROOT)/target/rtl/include $(IDMA_ROOT)/test \
@@ -82,9 +87,10 @@ $(IDMA_VLT_DIR)/build-%/vlt-sources.flist: \
 	rsync -c $(IDMA_VLT_FILELIST_TMP_DIR)/$*.flist $@
 	rm -f $(IDMA_VLT_FILELIST_TMP_DIR)/$*.flist
 
+.SECONDEXPANSION:
 $(IDMA_VLT_DIR)/build-%/vlt.bin: \
 		$(IDMA_VLT_DIR)/build-%/vlt-sources.flist \
-		$(IDMA_VLT_SOURCES) \
+		$$(IDMA_VLT_SOURCES) \
 		$(IDMA_VLT_HEADERS) \
 		$(IDMA_VLT_DPI_SOURCES) \
 		$(IDMA_INCLUDE_ALL)
