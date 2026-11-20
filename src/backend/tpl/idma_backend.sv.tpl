@@ -401,7 +401,10 @@ _rsp_t ${protocol}_write_rsp_i,
                 // generate new response
                 rsp_valid_o             = 1'b1;
                 idma_rsp_o              =  '0;
-                idma_rsp_o.last         = 1'b1;
+                // last only for the last burst of the transfer, as on the
+                // normal path (super_last): the ND midend completes the
+                // transfer on the response with last set
+                idma_rsp_o.last         = idma_req_i.opt.last;
                 idma_rsp_o.error        = 1'b1;
                 idma_rsp_o.pld.err_type = idma_pkg::BACKEND;
             end

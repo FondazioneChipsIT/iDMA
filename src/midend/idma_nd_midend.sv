@@ -82,6 +82,15 @@ module idma_nd_midend #(
     // last burst of this ND transfer
     logic last;
 
+    // ND transfers handed to the backend whose completion has not been forwarded yet.
+    // A zero transfer (every rep at 0, or length 0) is answered by the midend itself; it is
+    // accepted only when this count is 0, so that its response cannot overtake the responses
+    // of earlier transfers (idma_transfer_id_gen counts completions and assumes they come in
+    // order).
+    localparam int unsigned PendingWidth = 16;
+    logic [PendingWidth-1:0] pending_d, pending_q;
+    logic issue_nd, retire_nd;
+
     // the current address pointers
     addr_t src_addr_d, src_addr_q;
     addr_t dst_addr_d, dst_addr_q;
@@ -89,7 +98,9 @@ module idma_nd_midend #(
     // assign the handshaking signals on the input
     assign stage_done[0]  = nd_req_valid_i;
     assign last           = &(stage_done[NumDim-1:0]);
-    assign nd_req_ready_o = last & nd_req_valid_i & burst_req_ready_i;
+    // a zero transfer also waits until nothing is pending and its response can be taken
+    assign nd_req_ready_o = last & nd_req_valid_i & burst_req_ready_i &
+                            (!zero | ((pending_q == '0) & nd_rsp_ready_i));
 
     // all stages are zero
     assign zero = &(stage_zero);
@@ -117,8 +128,10 @@ module idma_nd_midend #(
         assign stage_en   [d-2] = &(stage_done[d-2:0]) & burst_req_ready_i;
         assign stage_clear[d-2] = &(stage_done[d-1:0]) & burst_req_ready_i;
 
-        // size conversion
-        assign local_rep = nd_req_valid_i ? nd_req_i.d_req[d-2].reps[RepWidth-1:0] : '0;
+        // size conversion; a transfer of length 0 moves no data whatever its reps, so every
+        // dimension is bypassed and the transfer is answered here as a zero transfer
+        assign local_rep = (nd_req_valid_i && nd_req_i.burst_req.length != '0) ?
+                           nd_req_i.d_req[d-2].reps[RepWidth-1:0] : '0;
 
         // bypass if num iterations is 0, mark stage as 0 stage:
         always_comb begin : proc_zero_bypass
@@ -228,12 +241,21 @@ module idma_nd_midend #(
 
 
     //--------------------------------------
+    // Pending ND transfers
+    //--------------------------------------
+    assign issue_nd  = nd_req_valid_i & nd_req_ready_o & !zero;
+    assign retire_nd = burst_rsp_valid_i & burst_rsp_i.last & burst_rsp_ready_o;
+    assign pending_d = pending_q + issue_nd - retire_nd;
+
+
+    //--------------------------------------
     // State
     //--------------------------------------
     `FFL(stride_sel_q, stride_sel_d, nd_req_valid_i, NumDim - 'd1, clk_i, rst_ni)
     `FFL(src_addr_q,   src_addr_d,   nd_req_valid_i, '0,           clk_i, rst_ni)
     `FFL(dst_addr_q,   dst_addr_d,   nd_req_valid_i, '0,           clk_i, rst_ni)
     `FF (burst_sent_q, burst_sent_d,                 '0,           clk_i, rst_ni)
+    `FF (pending_q,    pending_d,                    '0,           clk_i, rst_ni)
 
     //--------------------------------------
     // Assertions
@@ -243,6 +265,10 @@ module idma_nd_midend #(
         num_dim : assert(NumDim >= 32'd2) else
             $fatal(1, "Parameter NumDim has to be >= 2!");
     end
+    pending_no_underflow : assert property (@(posedge clk_i) disable iff (!rst_ni)
+        retire_nd |-> (pending_q != '0)) else $error("completion with no ND transfer pending");
+    pending_no_overflow : assert property (@(posedge clk_i) disable iff (!rst_ni)
+        issue_nd |-> (pending_q != '1)) else $error("pending ND transfer counter overflow");
     )
 
 endmodule : idma_nd_midend

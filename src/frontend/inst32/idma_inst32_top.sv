@@ -211,7 +211,7 @@ module idma_inst32_top #(
       .axi_resp_t(axi_resp_t)
     ) i_init_axi_rw_join (
       .clk_i ( datapath_clk_gated ),
-      .rst_ni,
+      .rst_ni           ( rst_ni             ),
       .slv_read_req_i  (dma_req[2*s+1]),
       .slv_read_resp_o (dma_rsp[2*s+1]),
       .slv_write_req_i (dma_req[2*s]),
@@ -271,25 +271,34 @@ module idma_inst32_top #(
   // Here, another clock gating level is applied:
   //    - completely hw-controlled, this clock gating cell controls the datapath clock, disabling it when not needed.
 
-  logic keep_datapath_clocked, datapath_clk_en;
+  // The maximum inflight number of transfers is computed as: (FIFO DEPTH + number of outstanding bursts held by the backend +
+  // the transfer currently handled by the midend) * number of streams
+  localparam int unsigned MaxInflight   = NumStreams * (GLOBAL_QUEUE_DEPTH + NB_OUTSND_BURSTS + 2);
+  localparam int unsigned InflightWidth = $clog2(MaxInflight + 1);
 
-  // Register to keep the clock active until event completion
-  //    Once the transfer has started its execution (busy_o == 1'b1)
-  //    the datapath needs to be clocked until the completion event
-  //    has been received (|trans_complete). Then the datapath
-  //    can be gated again.
+  logic datapath_clk_en;
+  logic [InflightWidth-1:0] inflight_d, inflight_q;
 
-  always_ff @(posedge clk_i, negedge rst_ni) begin
-    if (rst_ni == 1'b0) begin
-      keep_datapath_clocked <= 1'b0;
-    end else if (busy_o == 1'b1) begin
-      keep_datapath_clocked <= 1'b1;
-    end else if (|trans_complete) begin
-      keep_datapath_clocked <= 1'b0;
+  // This counter keeps track of any ongoing transfers on the streams.
+  always_comb begin : proc_inflight
+    inflight_d = inflight_q;
+    for (int unsigned s = 0; s < NumStreams; s++) begin
+      if (fe_valid[s] & fe_ready[s]) inflight_d = inflight_d + 1'b1;
+      if (trans_complete[s])         inflight_d = inflight_d - 1'b1;
     end
   end
 
-  assign datapath_clk_en = (one_fe_valid | (|trans_complete) | keep_datapath_clocked);
+  always_ff @(posedge clk_i, negedge rst_ni) begin
+    if (rst_ni == 1'b0) begin
+      inflight_q <= '0;
+    end else begin
+      inflight_q <= inflight_d;
+    end
+  end
+
+  // Check if the datapath needs to be clocked.
+
+  assign datapath_clk_en = one_fe_valid | (|trans_complete) | (inflight_q != '0);
 
   // // ----------------------------------------------------------------------------------------------------------
   // // DATAPATH CLOCK GATING CELL --> This gates everything except for the frontend and the periph_to_reg modules
@@ -379,7 +388,7 @@ module idma_inst32_top #(
       .IdWidth(ID_WIDTH)
     ) i_idma_transfer_id_gen (
       .clk_i      ( datapath_clk_gated ),
-      .rst_ni,
+      .rst_ni     ( rst_ni                   ),
       .issue_i    (fe_valid[s] & fe_ready[s]),
       .retire_i   (trans_complete[s]),
       .next_o     (next_id[s]),
@@ -396,7 +405,7 @@ module idma_inst32_top #(
       .T    (idma_nd_req_t)
     ) i_3D_request_fifo (
       .clk_i     ( datapath_clk_gated ),
-      .rst_ni,
+      .rst_ni     ( rst_ni              ),
       .flush_i   (1'b0),
       .testmode_i(test_mode_i),
       .usage_o   (  /*NOT CONNECTED*/),
@@ -419,7 +428,7 @@ module idma_inst32_top #(
       .RepWidths    (RepWidths)
     ) i_idma_3D_midend (
       .clk_i            ( datapath_clk_gated       ),
-      .rst_ni,
+      .rst_ni           ( rst_ni              ),
       .nd_req_i         (twod_req_queue[s]),
       .nd_req_valid_i   (twod_queue_valid[s]),
       .nd_req_ready_o   (twod_queue_ready[s]),
@@ -617,7 +626,7 @@ module idma_inst32_top #(
         .T(logic)
       ) i_init_read_rsp_reflect (
         .clk_i  ( datapath_clk_gated ),
-        .rst_ni,
+        .rst_ni  ( rst_ni                  ),
         .valid_i(init_read_req.req_valid),
         .ready_o(init_read_rsp.req_ready),
         .data_i('0),  // not used
@@ -633,7 +642,7 @@ module idma_inst32_top #(
         .T(logic)
       ) i_init_write_rsp_reflect (
         .clk_i ( datapath_clk_gated ),
-        .rst_ni,
+        .rst_ni ( rst_ni                   ),
         .valid_i(init_write_req.req_valid),
         .ready_o(init_write_rsp.req_ready),
         .data_i('0),  // not used
@@ -854,7 +863,7 @@ module idma_inst32_top #(
         .T(logic)
       ) i_init_read_rsp_reflect (
         .clk_i ( datapath_clk_gated ),
-        .rst_ni,
+        .rst_ni  ( rst_ni                  ),
         .valid_i(init_read_req.req_valid),
         .ready_o(init_read_rsp.req_ready),
         .data_i('0),  // not used
@@ -869,7 +878,7 @@ module idma_inst32_top #(
         .T(logic)
       ) i_init_write_rsp_reflect (
         .clk_i ( datapath_clk_gated ),
-        .rst_ni,
+        .rst_ni  ( rst_ni                   ),
         .valid_i(init_write_req.req_valid),
         .ready_o(init_write_rsp.req_ready),
         .data_i('0),  // not used
@@ -914,7 +923,7 @@ module idma_inst32_top #(
         .UseIdForRouting     ( 1'b0          )
       ) obi_read_mux_i (
         .clk_i ( datapath_clk_gated ),
-        .rst_ni,
+        .rst_ni          ( rst_ni                                                ),
         .testmode_i     (test_mode_i),
         .sbr_ports_req_i({obi_reorg_req_from_dma[s], obi_read_req_from_dma[s]}),
         .sbr_ports_rsp_o({obi_reorg_rsp_to_dma[s], obi_read_rsp_to_dma[s]}),
@@ -934,8 +943,8 @@ module idma_inst32_top #(
         .Depth(1)
       ) obi_rready_converter_reorg_i (
         .clk_i ( datapath_clk_gated ),
-        .rst_ni,
-        .test_mode_i,
+        .rst_ni        ( rst_ni                           ),
+        .test_mode_i   ( test_mode_i                      ),
         .sbr_a_chan_i  ( obi_reorg_req_from_dma[s].a       ),
         .req_i         ( obi_reorg_req_from_dma[s].req     ),
         .gnt_o         ( obi_reorg_rsp_to_dma[s].gnt       ),
@@ -959,8 +968,8 @@ module idma_inst32_top #(
       .Depth(1)
     ) obi_rready_converter_read_i (
       .clk_i ( datapath_clk_gated ),
-      .rst_ni,
-      .test_mode_i,
+      .rst_ni        ( rst_ni                         ),
+      .test_mode_i   ( test_mode_i                    ),
       .sbr_a_chan_i  ( obi_read_req_muxed[s].a        ),
       .req_i         ( obi_read_req_muxed[s].req      ),
       .gnt_o         ( obi_read_rsp_to_mux[s].gnt     ),
@@ -984,8 +993,8 @@ module idma_inst32_top #(
       .Depth(1)
     ) obi_rready_converter_wr_i (
       .clk_i ( datapath_clk_gated ),
-      .rst_ni,
-      .test_mode_i,
+      .rst_ni        ( rst_ni                           ),
+      .test_mode_i   ( test_mode_i                      ),
       .sbr_a_chan_i  ( obi_write_req_from_dma[s].a       ),
       .req_i         ( obi_write_req_from_dma[s].req     ),
       .gnt_o         ( obi_write_rsp_to_dma[s].gnt       ),
@@ -1032,7 +1041,7 @@ module idma_inst32_top #(
         .FifoDepth(32'd1)
       ) i_mem_to_banks_write (
         .clk_i ( datapath_clk_gated ),
-        .rst_ni,
+        .rst_ni        ( rst_ni                                                                                            ),
         .req_i         ( obi_write_req_from_rrc[s].req                                                                     ),
         .gnt_o         ( obi_write_rsp_to_rrc[s].gnt                                                                       ),
         .addr_i        ( obi_write_req_from_rrc[s].a.addr                                                                  ),
@@ -1073,7 +1082,7 @@ module idma_inst32_top #(
         .FifoDepth(32'd1)
       ) i_mem_to_banks_read (
         .clk_i ( datapath_clk_gated ),
-        .rst_ni,
+        .rst_ni        ( rst_ni                                                                                              ),
         .req_i         ( obi_read_req_from_rrc[s].req                                                                        ),
         .gnt_o         ( obi_read_rsp_to_rrc[s].gnt                                                                          ),
         .addr_i        ( obi_read_req_from_rrc[s].a.addr                                                                     ),
@@ -1122,7 +1131,7 @@ module idma_inst32_top #(
           .FifoDepth(32'd1)
         ) i_mem_to_banks_reorg (
           .clk_i ( datapath_clk_gated ),
-          .rst_ni,
+          .rst_ni        ( rst_ni                                                                                            ),
           .req_i         ( obi_reorg_req_from_rrc[s].req                                                                     ),
           .gnt_o         ( obi_reorg_rsp_to_rrc[s].gnt                                                                       ),
           .addr_i        ( obi_reorg_req_from_rrc[s].a.addr                                                                  ),
