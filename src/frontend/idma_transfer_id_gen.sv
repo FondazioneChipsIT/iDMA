@@ -26,36 +26,33 @@ module idma_transfer_id_gen #(
     //--------------------------------------
     logic [IdWidth-1:0] next_d, next_q, completed_d, completed_q;
 
-    // count up on events
+    // count up on events only, and skip 0 (reserved for "not accepted") at the
+    // overflow: both counters then take the same IDs, ..., '1, 1, 2, ..., so
+    // completed_o is always the ID of the last transfer retired, whether or not
+    // the clock keeps running after it
     always_comb begin : proc_next_id
         // default
         next_d = next_q;
-        // overflow
-        if (next_q == '1) begin
-            if (issue_i)
-                next_d = 'h2;
-            else
-                next_d = 'h1;
         // request
-        end else begin
-            if (issue_i)
-                next_d = 'h1 + next_q;
+        if (issue_i) begin
+            if (next_q == '1) begin
+                next_d = 'h1;
+            end else begin
+                next_d = next_q + 'h1;
+            end
         end
     end
 
     always_comb begin : proc_next_completed
         // default
         completed_d = completed_q;
-        // overflow
-        if (completed_q == '1) begin
-            if (retire_i)
-                completed_d = 'h2;
-            else
-                completed_d = 'h1;
         // request
-        end else begin
-            if (retire_i)
-                completed_d = 'h1 + completed_q;
+        if (retire_i) begin
+            if (completed_q == '1) begin
+                completed_d = 'h1;
+            end else begin
+                completed_d = completed_q + 'h1;
+            end
         end
     end
 
