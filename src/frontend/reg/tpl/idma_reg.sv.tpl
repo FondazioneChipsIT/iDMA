@@ -49,6 +49,8 @@ module idma_${identifier} #(
   /// Maximum number of streams is set to 16. It can be enlarged, but the register file
   /// needs to be adapted too. It's set to 2 here to avoid binding to 0 useless registers in the pulp_cluster instance
   localparam int unsigned MaxNumStreams = 32'd2;
+  localparam int unsigned ArbIdxWidth = cf_math_pkg::idx_width(NumRegs);
+  logic [ArbIdxWidth-1:0] arb_idx;
 
   // register connections
   idma_${identifier}_reg_pkg::idma_${identifier}_reg2hw_t [NumRegs-1:0] dma_reg2hw;
@@ -63,14 +65,12 @@ module idma_${identifier} #(
   reg_rsp_t [NumRegs-1:0] dma_ctrl_rsp;
 
   always_comb begin
-      stream_idx_o = '0;
-      for (int r = 0; r < NumRegs; r++) begin
-          for (int c = 0; c < NumStreams; c++) begin
-              if (dma_reg2hw[r].next_id[c].re) begin
-                  stream_idx_o = c;
-              end
-          end
+    stream_idx_o = '0;
+    for (int c = 0; c < NumStreams; c++) begin
+      if (dma_reg2hw[arb_idx].next_id[c].re) begin
+        stream_idx_o = c;
       end
+    end
   end
 
   // generate the registers
@@ -209,7 +209,7 @@ module idma_${identifier} #(
     .gnt_i   ( req_ready_i ),
     .req_o   ( req_valid_o ),
     .data_o  ( dma_req_o   ),
-    .idx_o   ( /* NC */    )
+    .idx_o   ( arb_idx     )
   );
 
 endmodule
