@@ -107,6 +107,16 @@ module idma_${identifier} #(
         arb_valid[i] = read_happens;
     end
 
+    // user field: generate-time selection so the wide slice is only
+    // elaborated when UserWidth > 32 (avoids unsigned underflow in the index)
+    logic [UserWidth-1:0] user_field;
+
+    if (UserWidth > 32) begin : gen_user_wide
+      assign user_field = {dma_reg2hw[i].user_high.q, dma_reg2hw[i].user_low.q[UserWidth-33:0]};
+    end else begin : gen_user_narrow
+      assign user_field = dma_reg2hw[i].user_low.q[UserWidth-1:0];
+    end
+
     // assign request struct
     always_comb begin : proc_hw_req_conv
       // all fields are zero per default
@@ -124,11 +134,7 @@ module idma_${identifier} #(
 % endif
 
       // user field
-      if(UserWidth > 32) begin
-        arb_dma_req[i]${sep}user = {dma_reg2hw[i].user_high.q, dma_reg2hw[i].user_low.q[(UserWidth > 32 ? UserWidth-33 : 0):0]};
-      end else begin
-        arb_dma_req[i]${sep}user = dma_reg2hw[i].user_low.q;
-      end
+      arb_dma_req[i]${sep}user = user_field;
 
       // Protocols
       arb_dma_req[i]${sep}opt.src_protocol = idma_pkg::protocol_e'(dma_reg2hw[i].conf.src_protocol);
