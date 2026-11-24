@@ -2,7 +2,7 @@
 
 Currently, iDMA simulation is supported both in the pulp-sdk and the pulp-runtime. Besides minimal differences, the main supported features are:
 
-- Supported directions: L1->L2, L1->L2, L1-L1
+- Supported directions: L1->L2, L2->L1, L1->L1
 - On each direction, transfers up to 3 dimensions and 64 kByte of total size can be configured.
 - Both individual wait and barrier functions based on the transfer direction are supported.
 
@@ -20,12 +20,12 @@ On both sw stacks, the following testcases are supported:
 
 iDMA tests in regression tests repository: https://github.com/FondazioneChipsIT/regression_tests/tree/new_iDMA_tests/idma_tests
 
-Inside the regression tests folder there is also a benchmark test, that's being used for power evaluations. This test allows three modes:
+Inside the regression tests folder there is also a benchmark test, that's being used for power evaluations. This test allows four modes:
 
-    - TX: allows to enqueue up to 8 transfers towards L2
-    - RX: allows to enqueue up to 8 transfers towards L1
-    - TX_RX: allows to enqueue up to 8 transfers for each direction and executes them 2-by-2 in parallel.
-    - IDLE: the iDMA does nothing and a transfer is executed by Core 0.
+- TX: allows to enqueue up to 8 transfers towards L2
+- RX: allows to enqueue up to 8 transfers towards L1
+- TX_RX: allows to enqueue up to 8 transfers for each direction and executes them 2-by-2 in parallel.
+- IDLE: the iDMA does nothing and a transfer is executed by Core 0.
 
 iDMA tests in pulp-sdk repository: https://github.com/FondazioneChipsIT/pulp-sdk/tree/chips-it/tests/idma
 
@@ -60,7 +60,7 @@ In this case an individual wait has been used for blocking the execution until t
 The iDMA instance inside pulp cluster currently supports three transfer directions:
 
 - L1 -> L2
-  - This is done on the stream 0 and by configurting the following protocols:
+  - This is done on the stream 0 and by configuring the following protocols:
     - Source protocol: OBI
     - Destination protocol: AXI
 - L2 -> L1
@@ -70,15 +70,15 @@ The iDMA instance inside pulp cluster currently supports three transfer directio
 - L1 -> L1
   - This is done on the stream 1 and by configuring the following protocols:
     - Source protocol: OBI
-    - Destination protocol OBI
+    - Destination protocol: OBI
 
-Protcol configuration is transparent to the user, who needs just to specify the intended direction of the transfer.
+Protocol configuration is transparent to the user, who needs just to specify the intended direction of the transfer.
 From an HW perspective, this means having two separate physical channels, which instantiate different backend modules:
 
-- **COPY_IN CHANNEL**:
-  - This channel makes use of the *idma_backend_r_obi_rw_init_w_axi* module, which indeeds allow read operations through OBI and write opoerations through AXI.
-- **COPY_OUT CHANNEL**:
-  - This channel makes use of the *idma_backend_r_axi_rw_init_rw_obi* module, which indeeds allow read operations both through AXI and OBI and write operations through OBI.
+- **COPY_OUT CHANNEL** (stream 0, towards L2):
+  - This channel makes use of the *idma_backend_r_obi_rw_init_w_axi* module, which indeed allows read operations through OBI and write operations through AXI.
+- **COPY_IN CHANNEL** (stream 1, towards L1):
+  - This channel makes use of the *idma_backend_r_axi_rw_init_rw_obi* module, which indeed allows read operations both through AXI and OBI and write operations through OBI.
 
   The protocol configuration is done in the drivers through default configurations, as follows:
 
@@ -111,7 +111,7 @@ A one-dimensional transfer is pretty simple in terms of parameters that need to 
 
 ![1D_transfer_example](../images/1d_transfer_example.png)
 
-As shown in the above image, bytes are accessed contiguously in both memory regions. So, the 1D transfer can be seen as a 2D transfer where both strides and length are set to 1.
+As shown in the above image, bytes are accessed contiguously in both memory regions. So, the 1D transfer can be seen as a 2D transfer with a single repetition, whose length is the size of the transfer.
 
 When executing 2D transfers:
 
@@ -120,7 +120,7 @@ When executing 2D transfers:
 - **length**: number of consecutive bytes to be transferred before the next stride
 - **num_reps**: transfer size divided by the length, so how many consecutive transfers are to be executed
 
-An obvious requirement is for the length to be less than the strides, in order to avoid overwriting data in the destination region.
+An obvious requirement is for the length to be less than or equal to the destination stride, in order to avoid overwriting data in the destination region (equal to the stride means contiguous rows).
 
 ![2D_transfer_example](../images/2d_transfer_example.png)
 
@@ -133,13 +133,15 @@ In this case, we have:
 
 When executing 3D transfers, the following need to be defined in addition to the previous parameters:
 
-- **src_stride_3d**: this stride is the jump in bytes between two 2D "pages" in the source region of the transfer
-- **dst_stride_3d**: this stride is the jump in bytes between two 2D "pages" in the destination region of the transfer
+- **src_stride_3d**: this stride is the jump in bytes between two 2D "pages" in the source region of the transfer. It is measured from the start of the **last** row of a page to the start of the first row of the next page.
+- **dst_stride_3d**: the same in the destination region of the transfer.
+
+So the first row of page *k+1* starts at `start of page k + (num_reps - 1) * stride + stride_3d`, in both regions.
 - **num_reps_3d**: this is the number of 2D transfers that make up the three-dimensional transfer
 
 ![3D_transfer_example](../images/3d_transfer_example.png)
 
-As shown in the above image, the 3D transfer is composed of several (nmm_reps_3d) 2D transfers. The yellow arrows represent the 3D strides.
+As shown in the above image, the 3D transfer is composed of several (num_reps_3d) 2D transfers. The yellow arrows represent the 3D strides.
 In this case we have:
 
 - **src_stride**=4
@@ -152,15 +154,17 @@ Also, notice that strides (both 2D and 3D) can be different between the source a
 
 ## Deeploy support
 
-iDMA is partially supported inside Deeploy as well (only 1D transfers for now). Can be found here: https://github.com/FondazioneChipsIT/Deeploy/commits/chips-it/
+iDMA is supported inside Deeploy as well, on the PULPOpen target. Can be found here: https://github.com/FondazioneChipsIT/Deeploy/commits/chips-it/
 
 At the moment, only simulation on the pulp-open + iDMA rtl platform is supported (gvsoc model needs to be updated).
 
-At the moment, iDMA is supported in Deeploy. The following features are tested:
+The following features are supported:
 
-- 1D/2D transfers
-- clock gating control
+- 1D, 2D and 3D transfers (3D since Deeploy commit `a33d7e26`), in both directions between L2 and L1
+- 1D transfers longer than 65535 bytes, split at runtime into several transfers
+- clock gating control: the test harness enables the iDMA clock before running the network and disables it afterwards
 
 ### Note
 
-- In Deeploy the pulp-sdk drivers for iDMA are used.
+- In Deeploy the pulp-sdk drivers for iDMA are used. Their length argument is 16-bit, so in 2D and 3D transfers the length of one row must not exceed 65535 bytes.
+- Deeploy passes the 3D strides as plane-to-plane strides and converts them to the iDMA convention (measured from the last row of a plane, see [Transfer Examples](#transfer-examples)) before calling the drivers.

@@ -3,10 +3,10 @@
 This part of the iDMA is responsible for executing 1D transfers.
 In the current pulp cluster implementation there are two physical channels:
 
-- One supporting transfers towards L2: *idma_backend_r_obi_rw_init_w_axi*
-    - In this case OBI is used as source protocol while AXI as destination protocol.
-- The other supporting transfers towards L1: *idma_backend_r_axi_rw_init_rw_obi*
-    - In this case AXI is used as source protocol while OBI as destination protocol.
+- One supporting transfers towards L2 (stream 0): *idma_backend_r_obi_rw_init_w_axi*
+    - In this case OBI is used as source protocol while AXI as destination protocol. INIT can also be used, as a source (zero fill) or as a destination (data discarded).
+- The other supporting transfers towards L1 (stream 1): *idma_backend_r_axi_rw_init_rw_obi*
+    - In this case AXI (L2 -> L1) or OBI (L1 -> L1) is used as source protocol, while OBI is used as destination protocol. INIT can also be used, as a source (zero fill) or as a destination (data discarded).
 
 So, the source and destination protocols that are being configured differ from one case to the other.
 
@@ -18,7 +18,7 @@ Scheme:
 Transportation Layer scheme:
 ![iDMA_transportation_layer_gen_copy_out](../images/iDMA_transport_layer_r_obi_rw_init_w_axi.drawio.svg)
 
-## Description
+#### Description
 
 Since we're transferring data towards L2, the following is true:
 
@@ -30,9 +30,10 @@ Data coming from the *idma_obi_read_module* is sent to the *iDMA_dataflow_elemen
 ![iDMA_dataflow_element](../images/iDMA_dataflow_element.drawio.svg)
 
 From the dataflow element, the data is then sent to the iDMA_axi_write module, where the write request for the AXI protocol is created.
-#### Note: bursting is supported (by default at 256 bits)
 
-Then the write request is sent back to the top of the iDMA wrapper to be connected to the *axi_rw_stream_join* module.
+**Note:** bursting is supported. The maximum burst length is set by the `IDMA_BURST_LENGTH` parameter (256 bytes in the pulp cluster), or per transfer by the reduce_len/max_llen fields of CONF_REG. Bursts never cross a 4 KiB boundary.
+
+Then the write request is sent back to the top of the iDMA wrapper to be connected to the *axi_rw_join* module, which merges it with the AXI read requests of the other channel on the single AXI port.
 
 ### Backend for transfers towards L1
 
@@ -42,11 +43,11 @@ Scheme:
 Transportation Layer scheme:
 ![iDMA_transportation_layer_gen_copy_in](../images/iDMA_transport_layer_r_axi_rw_init_rw_obi.drawio.svg)
 
-## Description
+#### Description
 
 The situation is very similar to the L1 -> L2 case. The communication protocols are switched now:
 
-- We'll use the AXI protocol to read data from L2
+- We'll use the AXI protocol to read data from L2 (or the OBI protocol to read data from L1, for L1 -> L1 transfers)
 - We'll use the OBI protocol to write data to L1
 
 The structure of the iDMA dataflow element does not change with respect to the previous case. Data coming from the *iDMA_axi_read* module is sent to the dataflow element, where it passes through the FIFO buffer. Then, it's sent to the *iDMA_obi_write* module for creating the OBI write request, which is sent to the top of the iDMA wrapper.

@@ -1,6 +1,6 @@
 ---
 layout: default
-title: My Project Documentation
+title: User Manual
 ---
 
 # iDMA Architecture Documentation

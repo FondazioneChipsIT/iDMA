@@ -29,15 +29,15 @@ iDMA itself has some hw dependencies, such as:
 
 ```yaml
 dependencies:
-  axi
-  axi_stream
-  common_cells
-  common_verification
-  register_interface
-  obi
+  - axi
+  - axi_stream
+  - common_cells
+  - common_verification
+  - register_interface
+  - obi
 ```
 
-## Building supported RTL plaforms
+## Building supported RTL platforms
 
 As mentioned, iDMA RTL code needs to be generated before compiling the chosen rtl platform.
 
@@ -64,7 +64,7 @@ make build ## This compiles the RTL platform based on the compile.tcl generated 
 Once the RTL platform has been successfully populated with IPs and compiled, iDMA can be tested at system level within the following software stacks:
 
 - [pulp-runtime](https://github.com/FondazioneChipsIT/pulp-runtime): note that only pulp cluster is currently supported on this software stack
-- [pulp-sdk](https://github.com/FondazioneChipsIT/pulp-sdk): not that only pulp-open is currently supported on this software stack
+- [pulp-sdk](https://github.com/FondazioneChipsIT/pulp-sdk): note that only pulp-open is currently supported on this software stack
 
 Depending on the chosen RTL platform follow one of the listed flows.
 
@@ -100,10 +100,10 @@ The supported tests are:
 - **idma_multi_core**: tests the iDMA 1D transfer capabilities
 - **idma_multi_core_2d**: tests the iDMA 2D transfer capabilities
 - **idma_multi_core_3d**: tests the iDMA 3D transfer capabilities
-- **idma_benchmark_tests**: this one allows to test three different scenarios, depending ont the following command-line flags:
+- **idma_benchmark_tests**: this one allows to test three different scenarios, depending on the following command-line flags:
     - TX=1: tests a L1 -> L2 1D transfer
     - RX=1: tests a L2 -> L1 1D transfer
-    - TX_RX: tests a L1 -> L2 and a L2 -> L1 transfer in parallel
+    - TX_RX=1: tests a L1 -> L2 and a L2 -> L1 transfer in parallel
     - IDLE=1: iDMA does nothing, while the transfer is executed by the core
 
 Random stimuli generation is also supported for iDMA testing. While pre-generated stimuli are already available, you can generate your own:

@@ -25,7 +25,7 @@ iDMA is centered around the idea to split the DMA engine in 3 distinct parts:
 - **Frontend:** The frontend implements the communication with the platform and emits transfer requests
 - **Midend:** Midend(s) transform a transfer request from the frontend to generic 1D transfers,
               which can be handled by the backend.
-- **Bakend:** The backend gets a 1D transfer `(src_addr, dst_addr, length)` and executes it
+- **Backend:** The backend gets a 1D transfer `(src_addr, dst_addr, length)` and executes it
               on the transport protocol's manager interface.
 
 The interface between the parts are well-defined, making it easy to adapt to a new system or to add
