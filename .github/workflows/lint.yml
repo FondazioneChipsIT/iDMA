@@ -72,7 +72,7 @@ jobs:
 #          }
 
   lint-python:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       -
         name: Checkout
@@ -90,7 +90,7 @@ jobs:
           ignore: E128
 
   lint-yaml:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       -
         name: Checkout
@@ -108,7 +108,7 @@ jobs:
           config_file: .github/yamllint-conf.yml
 
   lint-commit:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       -
         uses: actions/checkout@v4
@@ -131,7 +131,7 @@ jobs:
         run: python3 util/lint-commits.py HEAD
 
   lint-author:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       -
         name: Checkout
