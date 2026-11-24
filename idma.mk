@@ -441,7 +441,7 @@ idma_spinx_doc_clean:
 
 IDMA_NONFREE_REMOTE ?= git@gitlab.chips.it:digitalresearchline/chips-restricted/iDMA-nonfree.git
 IDMA_NONFREE_DIR    ?= $(IDMA_ROOT)/nonfree
-IDMA_NONFREE_COMMIT ?= c369200598e5a4398e418cc1aac0c342b2d5a7ac
+IDMA_NONFREE_COMMIT ?= ce5aac2f793f10e50e7fa7efbd9a992b67bbcca5
 
 idma_nonfree_init:
 	git clone $(IDMA_NONFREE_REMOTE) $(IDMA_NONFREE_DIR)
